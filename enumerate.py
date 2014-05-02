@@ -1,3 +1,7 @@
+#
+# Raphaël Charbey, 2014
+#
+
 from igraph import Graph
 import sys
 import json
