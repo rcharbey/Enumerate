@@ -16,12 +16,12 @@ class Vsub:
     self.des = 0
     self.length = 1
     self.index = [-1]*length
-    #self.vsub.index[v.index] = 0
     self.adjacency_matrix = [[False]*5]*5
     
 
 GLOBAL_POWER_TABLE = [0, 6, 36, 216, 1296]
 GLOBAL_POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
+LIST_NEIGHBORS = []
 
 def create_graph(name):
     path = "./FBSAMPLE/"+name+"/friends.jsons"
@@ -70,7 +70,7 @@ def in_neighborhood_vsub.vertices(v, vsub.index, list_neighbors):
             return True
     return False
   
-def degree_disambiguation(vsub.vertices, vsub.length, adjacency_matrix_vsub.vertices, conflict, referee, vsub.degree, dic_pos_count, pos_count):
+def degree_disambiguation(vsub.vertices, vsub.length, vsub.adjacency_matrix, conflict, referee, vsub.degree, dic_pos_count, pos_count):
     i = 0
     list_of_conflictual_vertices = []
     index_of_referee = -1
@@ -84,7 +84,7 @@ def degree_disambiguation(vsub.vertices, vsub.length, adjacency_matrix_vsub.vert
             pos_count[vsub.vertices[i].index][dic_pos_count[vsub.degree[i]]-1] += 1
         i += 1
     for index_of_conflictual_vertex in list_of_conflictual_vertices:
-        if adjacency_matrix_vsub.vertices[index_of_conflictual_vertex][index_of_referee] or adjacency_matrix_vsub.vertices[index_of_referee][index_of_conflictual_vertex]:
+        if vsub.adjacency_matrix[index_of_conflictual_vertex][index_of_referee] or vsub.adjacency_matrix[index_of_referee][index_of_conflictual_vertex]:
             pos_count[vsub.vertices[index_of_conflictual_vertex].index][dic_pos_count[vsub.degree[index_of_conflictual_vertex]][0]-1] += 1
         else:
             pos_count[vsub.vertices[index_of_conflictual_vertex].index][dic_pos_count[vsub.degree[index_of_conflictual_vertex]][1]-1] += 1
@@ -95,8 +95,8 @@ def calculate_neighbors_degree(v, vsub.neighbors, vsub.degree):
         result += 1+vsub.degree[n]
     return result
       
-def disambiguate2122(pattern_matching, vsub.vertices, vsub.neighbors, adjacency_matrix_vsub.vertices, vsub.degree, pat_count, pos_count):
-    if vsub.degree[4] == 2 and adjacency_matrix_vsub.vertices[max(vsub.neighbors[4][0], vsub.neighbors[4][1])][min(vsub.neighbors[4][0], vsub.neighbors[4][1])]:
+def disambiguate2122(pattern_matching, vsub.vertices, vsub.neighbors, vsub.adjacency_matrix, vsub.degree, pat_count, pos_count):
+    if vsub.degree[4] == 2 and vsub.adjacency_matrix[max(vsub.neighbors[4][0], vsub.neighbors[4][1])][min(vsub.neighbors[4][0], vsub.neighbors[4][1])]:
         pat_count[21-1] += 1
         pos_count[vsub.vertices[4].index][51-1] += 1
         i = 0
@@ -114,7 +114,7 @@ def disambiguate2122(pattern_matching, vsub.vertices, vsub.neighbors, adjacency_
         i = 0
         while i <= 3:
             if vsub.degree[i] == 2:
-                if adjacency_matrix_vsub.vertices[4][i]:
+                if vsub.adjacency_matrix[4][i]:
                     pos_count[vsub.vertices[i].index][50-1] += 1
                 else:
                     pos_count[vsub.vertices[i].index][51-1] += 1
@@ -145,7 +145,7 @@ def disambiguate2122(pattern_matching, vsub.vertices, vsub.neighbors, adjacency_
         pos_count[vsub.vertices[i].index][pattern_matching[2][vsub.degree[i]]] += 1
         i += 1
     
-def disambiguate1317(pattern_matching, vsub.vertices, vsub.neighbors, adjacency_matrix_vsub.vertices, vsub.degree, pat_count, pos_count):
+def disambiguate1317(pattern_matching, vsub.vertices, vsub.neighbors, vsub.adjacency_matrix, vsub.degree, pat_count, pos_count):
     d = vsub.degree[4]
     if d == 1 and vsub.degree[vsub.neighbors[4][0]] == 2:
         pat_count[13-1] += 1
@@ -158,7 +158,7 @@ def disambiguate1317(pattern_matching, vsub.vertices, vsub.neighbors, adjacency_
             else:
                 pos_count[vsub.vertices[i].index][28-1] += 1
             i += 1
-    elif d == 2 and adjacency_matrix_vsub.vertices[max(vsub.neighbors[4][0], vsub.neighbors[4][1])][min(vsub.neighbors[4][0], vsub.neighbors[4][1])]:
+    elif d == 2 and vsub.adjacency_matrix[max(vsub.neighbors[4][0], vsub.neighbors[4][1])][min(vsub.neighbors[4][0], vsub.neighbors[4][1])]:
         pat_count[13-1] += 1
         pos_count[vsub.vertices[4].index][27-1] += 1
         i = 0
@@ -207,12 +207,12 @@ def disambiguate1317(pattern_matching, vsub.vertices, vsub.neighbors, adjacency_
                     pos_count[vsub.vertices[i].index][pattern_matching[2][vsub.degree[i]]] += 1
                 i += 1
 
-def index_pattern(vsub.vertices, vsub.neighbors, vsub.length, adjacency_matrix_vsub.vertices, vsub.degree, des, pat_count, pos_count, patterns, power_table, power_differences_table):
+def index_pattern(vsub, pat_count, pos_count, patterns, power_table, power_differences_table):
     pattern_matching = patterns[des]
     if pattern_matching[0] == 2122:
-        disambiguate2122(pattern_matching, vsub.vertices, vsub.neighbors, adjacency_matrix_vsub.vertices, vsub.degree, pat_count, pos_count)
+        disambiguate2122(pattern_matching, vsub.vertices, vsub.neighbors, vsub.adjacency_matrix, vsub.degree, pat_count, pos_count)
     elif pattern_matching[0] == 1317:
-        disambiguate1317(pattern_matching, vsub.vertices, vsub.neighbors, adjacency_matrix_vsub.vertices, vsub.degree, pat_count, pos_count)
+        disambiguate1317(pattern_matching, vsub.vertices, vsub.neighbors, vsub.adjacency_matrix, vsub.degree, pat_count, pos_count)
     else:
         pat_count[pattern_matching[0]-1] += 1
         if pattern_matching[0] == 10:
@@ -231,16 +231,16 @@ def index_pattern(vsub.vertices, vsub.neighbors, vsub.length, adjacency_matrix_v
                 pos_count[vsub.vertices[i].index][pattern_matching[1][1]-1] += 1
                 i += 1
             for index_of_conflictual_vertex in list_of_conflictual_vertices:
-                if adjacency_matrix_vsub.vertices[index_of_conflictual_vertex][index_of_referee1] or adjacency_matrix_vsub.vertices[index_of_referee1][index_of_conflictual_vertex] or adjacency_matrix_vsub.vertices[index_of_referee2][index_of_conflictual_vertex] or adjacency_matrix_vsub.vertices[index_of_conflictual_vertex][index_of_referee2]:
+                if vsub.adjacency_matrix[index_of_conflictual_vertex][index_of_referee1] or vsub.adjacency_matrix[index_of_referee1][index_of_conflictual_vertex] or vsub.adjacency_matrix[index_of_referee2][index_of_conflictual_vertex] or vsub.adjacency_matrix[index_of_conflictual_vertex][index_of_referee2]:
                     pos_count[vsub.vertices[index_of_conflictual_vertex].index][pattern_matching[1][vsub.degree[index_of_conflictual_vertex]][0]-1] += 1
                 else:
                     pos_count[vsub.vertices[index_of_conflictual_vertex].index][pattern_matching[1][vsub.degree[index_of_conflictual_vertex]][1]-1] += 1
         elif pattern_matching[0] == 12:
-            degree_disambiguation(vsub.vertices, vsub.length, adjacency_matrix_vsub.vertices, 1, 2, vsub.degree, pattern_matching[1], pos_count)
+            degree_disambiguation(vsub.vertices, vsub.length, vsub.adjacency_matrix, 1, 2, vsub.degree, pattern_matching[1], pos_count)
         elif pattern_matching[0] == 18:
-            degree_disambiguation(vsub.vertices, vsub.length, adjacency_matrix_vsub.vertices, 3, 1, vsub.degree, pattern_matching[1], pos_count)
+            degree_disambiguation(vsub.vertices, vsub.length, vsub.adjacency_matrix, 3, 1, vsub.degree, pattern_matching[1], pos_count)
         elif pattern_matching[0] == 26:
-            degree_disambiguation(vsub.vertices, vsub.length, adjacency_matrix_vsub.vertices, 3, 1, vsub.degree, pattern_matching[1], pos_count)
+            degree_disambiguation(vsub.vertices, vsub.length, vsub.adjacency_matrix, 3, 1, vsub.degree, pattern_matching[1], pos_count)
         else:
             i = 0
             while i < vsub.length:
@@ -262,7 +262,7 @@ def calculate_des(vsub.index, vsub.length, vsub.neighbors, power_table):
 
 def extend_subgraph(list_neighbors, vsub, vext, v, k, pat_count, pos_count, patterns, power_table, power_differences_table):
     if vsub.length > 1:
-        index_pattern(vsub.vertices, vsub.neighbors, vsub.length, adjacency_matrix_vsub.vertices, vsub.degree, des, pat_count, pos_count, patterns, power_table, power_differences_table)
+        index_pattern(vsub pat_count, pos_count, patterns, power_table, power_differences_table)
         if vsub.length == k:
             return
     while vext:
@@ -276,18 +276,18 @@ def extend_subgraph(list_neighbors, vsub, vext, v, k, pat_count, pos_count, patt
                     vsub.degree[vsub.length] += 1
                     des2 += power_differences_table[vsub.degree[vsub.index[u.index]]]
                     vsub.degree[vsub.index[u.index]] += 1
-                    adjacency_matrix_vsub.vertices[vsub.length][vsub.index[u.index]] = True
+                    vsub.adjacency_matrix[vsub.length][vsub.index[u.index]] = True
                 elif not in_neighborhood_vsub.vertices(v, vsub.index, list_neighbors[u.index]):
                     vext2.append(u)
             else:
                 break
         vsub.vertices[vsub.length] = w
         vsub.index[w.index] = vsub.length
-        extend_subgraph(list_neighbors, vsub.vertices, vsub.neighbors, vsub.length+1, vsub.index, adjacency_matrix_vsub.vertices, vsub.degree, 
+        extend_subgraph(list_neighbors, vsub.vertices, vsub.neighbors, vsub.length+1, vsub.index, vsub.adjacency_matrix, vsub.degree, 
                         des+des2+power_table[vsub.degree[vsub.length]], vext2, v, k, pat_count, pos_count, patterns, power_table, power_differences_table)
         vsub.index[w.index] = -1
         for neighbor in vsub.neighbors[vsub.length]:
-            adjacency_matrix_vsub.vertices[vsub.length][neighbor] = False
+            vsub.adjacency_matrix[vsub.length][neighbor] = False
             vsub.degree[neighbor] -= 1
         vsub.degree[vsub.length] = 0
         vsub.neighbors[vsub.length] = []
@@ -326,6 +326,7 @@ def characterize_with_patterns(graph, k):
  
 def main():
     graph = create_graph(sys.argv[1])
+    LIST_NEIGHBORS = create_list_neighbors(graph)
     #graph = Graph.Formula("A-B, B-C, C-A, B-D")
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
     #couple = characterize_with_patterns(graph, 5)
