@@ -320,7 +320,7 @@ def characterize_with_patterns(graph, k):
  
 def main():
     #graph = create_graph(sys.argv[1])
-    graph = Graph.Formula("A-B, B-C, C-A, B-D")
+    graph = Graph.Formula("A-B, B-C, C-A, B-D, A-E, E-D")
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
     couple = characterize_with_patterns(graph, 5)
     print couple[0]
