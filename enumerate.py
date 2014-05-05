@@ -64,9 +64,9 @@ def create_LIST_NEIGHBORS(graph):
         l.sort(key =lambda vertex: vertex.index,  reverse = True)
     return LIST_NEIGHBORS  
   
-def in_neighborhood_vsub.vertices(v, vsub.index, LIST_NEIGHBORS):
-    for n in LIST_NEIGHBORS:
-        if not vsub.index[n.index] == -1:
+def in_neighborhood_vsub(v, vsub.index, list_neighbors):
+    for n in list_neighbors:
+        if vsub.index[n.index] != -1:
             return True
     return False
   
@@ -279,7 +279,7 @@ def extend_subgraph(vsub, vext, v, pat_count, pos_count):
                     des2 += POWER_DIFFERENCES_TABLE[vsub.degree[u_in_vsub]]
                     vsub.degree[u_in_vsub] += 1
                     vsub.adjacency_matrix[w_in_vsub][u_in_vsub] = True
-                elif not in_neighborhood_vsub.vertices(v, vsub.index, LIST_NEIGHBORS[u.index]):
+                elif not in_neighborhood_vsub(v, vsub.index, LIST_NEIGHBORS[u.index]):
                     vext2.append(u)
             else:
                 break
