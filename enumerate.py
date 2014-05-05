@@ -1,45 +1,15 @@
 #
-# Raphaël Charbey, 2014
+# Raphael Charbey, 2014
 #
-
 from igraph import Graph
 import sys
 import json
 import profile
+sys.path.append("/home/raphael/MPRI/Stage MPRI/sources/patterns/PATTERNS")
+from PATTERNS import patterns_5
 
 GLOBAL_POWER_TABLE = [0, 6, 36, 216, 1296]
 GLOBAL_POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
-
-GLOBAL_PATTERNS = {
-      12:(1, {1:1}), #1
-      48:(2, {1:2, 2:3}), #2
-      108:(3, {2:4}), #3
-      84:(4, {1:5, 2:6}), #4
-      234:(5, {1:7, 3:8}), #5
-      294:(6, {1:9, 2:10, 3:11}), #6
-      144:(7, {2:12}), #7
-      504:(8,  {2:13,  3:14}),  #8
-      864:(9,  {3:15}),  #9
-      120:(10,  {1:16,  2:[17, 18]}),  #10
-      1320:(11,  {1:19,  4:20}),  #11
-      270:(12,  {1:[21, 22],  2:23,  3:24}),  #12
-      330:(1317,  {1:25,  2:[26,  27],  3:28},  {1:36,  2:[37, 38],  3:39}),  #13 ou 17
-      480:(14,  {1:29,  2:30,  3:31}),  #14
-      1380:(15,  {1:32,  2:33,  4:34}),  #15
-      180:(16,  {2:35}),  #16
-      690:(18,  {1:40,  2:41,  3:[42, 43]}),  #18
-      1590:(19,  {1:44,  2:45,  3:46,  4:47}),  #19
-      1440:(20,  {2:48,  4:49}),  #20 
-      540:(2122,  {2:[50,  51],  3:52},  {2:53,  3:54}),  #21 ou 22
-      1950:(23,  {1:55,  3:56,  4:57}),  #23
-      1800:(24,  {2:58,  3:59,  4:60}),  #24
-      2700:(25,  {2:61,  4:62}),  #25
-      900:(26,  {2:63,  3:[64,  65]}),  #26
-      2160:(27,  {3:66,  4:67}),  #27
-      3060:(28,  {2:68,  3:69,  4:70}),  #28
-      4320:(29,  {3:71,  4:72}),  #29
-      6480:(30,  {4:73})#30
-     }
 
 def create_graph(name):
     path = "./export_sample/"+name+"/friends.jsons"
@@ -317,13 +287,13 @@ def characterize_with_patterns(graph, k):
     pt = 30*[0]
     ps = []
     i = 0
+    patterns = patterns_5.PATTERNS
+    power_table = GLOBAL_POWER_TABLE
+    power_differences_table = GLOBAL_POWER_DIFFERENCES_TABLE
     while i < length:
         ps.append(73*[0])
         i += 1
     list_neighbors = create_list_neighbors(graph)
-    patterns = GLOBAL_PATTERNS
-    power_table = GLOBAL_POWER_TABLE
-    power_differences_table = GLOBAL_POWER_DIFFERENCES_TABLE
     for v in vs:
         vsub = [v, None, None, None, None]
         neighbors_vsub = [[], [], [], [], []]
