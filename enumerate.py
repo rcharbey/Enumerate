@@ -249,8 +249,8 @@ def calculate_des(index_vsub, length_vsub, neighbors_vsub, power_table):
     return des
 
 def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, degree_vsub, des, vext, 
-                    v, k, pt, ps, patterns, power_table, power_differences_table):
-    print "vext : ",
+                    v, k, pt, ps, patterns, power_table, power_differences_table,niveau):
+    print "vext " + str(niveau) + " :" ,
     for vex in vext:
         print vex.index,
     print
@@ -277,7 +277,7 @@ def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsu
         vsub[length_vsub] = w
         index_vsub[w.index] = length_vsub
         extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub+1, index_vsub, adjacency_matrix_vsub, degree_vsub, 
-                        des+des2+power_table[degree_vsub[length_vsub]], vext2, v, k, pt, ps, patterns, power_table, power_differences_table)
+                        des+des2+power_table[degree_vsub[length_vsub]], vext2, v, k, pt, ps, patterns, power_table, power_differences_table,niveau+1)
         index_vsub[w.index] = -1
         for neighbor in neighbors_vsub[length_vsub]:
             adjacency_matrix_vsub[length_vsub][neighbor] = False
@@ -315,7 +315,7 @@ def characterize_with_patterns(graph, k):
                break
         if vext:
             extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, degree_vsub, des, vext, v, k, pt, 
-                            ps, patterns, power_table, power_differences_table)
+                            ps, patterns, power_table, power_differences_table,0)
     return (pt, ps) 
  
 def main():
