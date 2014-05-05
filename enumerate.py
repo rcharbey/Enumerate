@@ -6,13 +6,13 @@ import sys
 import json
 import profile
 sys.path.append("/home/raphael/MPRI/Stage MPRI/sources/patterns/PATTERNS")
-from PATTERNS import patterns_5
+import patterns_5
 
 GLOBAL_POWER_TABLE = [0, 6, 36, 216, 1296]
 GLOBAL_POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
 
 def create_graph(name):
-    path = "./export_sample/"+name+"/friends.jsons"
+    path = "./FBSAMPLE/"+name+"/friends.jsons"
     f = open(path, 'r')
     list_of_edges = []
     index_to_vertex = {}
