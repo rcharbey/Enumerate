@@ -51,21 +51,21 @@ def create_graph(name):
         v["name"] = index_to_vertex[v.index]
     return graph
            
-def create_list_neighbors(graph):
+def create_LIST_NEIGHBORS(graph):
     vs = graph.vs
     es = graph.es
-    list_neighbors = []
+    LIST_NEIGHBORS = []
     for v in vs:
-        list_neighbors.append([])
+        LIST_NEIGHBORS.append([])
     for e in es:
-        list_neighbors[e.target].append(vs[e.source])
-        list_neighbors[e.source].append(vs[e.target])
-    for l in list_neighbors:
+        LIST_NEIGHBORS[e.target].append(vs[e.source])
+        LIST_NEIGHBORS[e.source].append(vs[e.target])
+    for l in LIST_NEIGHBORS:
         l.sort(key =lambda vertex: vertex.index,  reverse = True)
-    return list_neighbors  
+    return LIST_NEIGHBORS  
   
-def in_neighborhood_vsub.vertices(v, vsub.index, list_neighbors):
-    for n in list_neighbors:
+def in_neighborhood_vsub.vertices(v, vsub.index, LIST_NEIGHBORS):
+    for n in LIST_NEIGHBORS:
         if not vsub.index[n.index] == -1:
             return True
     return False
@@ -260,37 +260,39 @@ def calculate_des(vsub.index, vsub.length, vsub.neighbors, power_table):
         i -= 1
     return des
 
-def extend_subgraph(list_neighbors, vsub, vext, v, k, pat_count, pos_count, patterns, power_table, power_differences_table):
+def extend_subgraph(vsub, vext, v, pat_count, pos_count):
     if vsub.length > 1:
-        index_pattern(vsub pat_count, pos_count, patterns, power_table, power_differences_table)
-        if vsub.length == k:
+        index_pattern(vsub, pat_count, pos_count)
+        if vsub.length == 5:
             return
     while vext:
         w = vext.pop()
+        w_in_vsub = vsub.length
         vext2 = list(vext)
         des2 = 0
-        for u in list_neighbors[w.index]:
+        for u in LIST_NEIGHBORS[w.index]:
             if u.index >= v.index:
-                if not vsub.index[u.index] == -1 :
-                    vsub.neighbors[vsub.length].append(vsub.index[u.index])
-                    vsub.degree[vsub.length] += 1
-                    des2 += power_differences_table[vsub.degree[vsub.index[u.index]]]
-                    vsub.degree[vsub.index[u.index]] += 1
-                    vsub.adjacency_matrix[vsub.length][vsub.index[u.index]] = True
-                elif not in_neighborhood_vsub.vertices(v, vsub.index, list_neighbors[u.index]):
+                u_in_vsub = vsub.index[u.index]
+                if u_in_vsub != -1 :
+                    vsub.neighbors[w_in_vsub].append(u_in_vsub)
+                    vsub.degree[w_in_vsub] += 1
+                    des2 += power_differences_table[vsub.degree[u_in_vsub]]
+                    vsub.degree[u_in_vsub] += 1
+                    vsub.adjacency_matrix[w_in_vsub][u_in_vsub] = True
+                elif not in_neighborhood_vsub.vertices(v, vsub.index, LIST_NEIGHBORS[u.index]):
                     vext2.append(u)
             else:
                 break
-        vsub.vertices[vsub.length] = w
-        vsub.index[w.index] = vsub.length
-        extend_subgraph(list_neighbors, vsub.vertices, vsub.neighbors, vsub.length+1, vsub.index, vsub.adjacency_matrix, vsub.degree, 
-                        des+des2+power_table[vsub.degree[vsub.length]], vext2, v, k, pat_count, pos_count, patterns, power_table, power_differences_table)
+        vsub.vertices[w_in_vsub] = w
+        vsub.index[w.index] = w_in_vsub
+        extend_subgraph(LIST_NEIGHBORS, vsub.vertices, vsub.neighbors, w_in_vsub+1, vsub.index, vsub.adjacency_matrix, vsub.degree, 
+        des+des2+power_table[vsub.degree[w_in_vsub]], vext2, v, k, pat_count, pos_count, patterns, power_table, power_differences_table)
         vsub.index[w.index] = -1
-        for neighbor in vsub.neighbors[vsub.length]:
-            vsub.adjacency_matrix[vsub.length][neighbor] = False
+        for neighbor in vsub.neighbors[w_in_vsub]:
+            vsub.adjacency_matrix[w_in_vsub][neighbor] = False
             vsub.degree[neighbor] -= 1
-        vsub.degree[vsub.length] = 0
-        vsub.neighbors[vsub.length] = []
+        vsub.degree[w_in_vsub] = 0
+        vsub.neighbors[w_in_vsub] = []
         
 def enumerate_from_v(v,pos_count,pat_count,vsub): 
     patterns = patterns_5.PATTERNS
@@ -300,13 +302,13 @@ def enumerate_from_v(v,pos_count,pat_count,vsub):
     vsub.length = 1
     vsub.index[v.index] = 0
     vext = []
-    for u in list_neighbors[v.index]:
+    for u in LIST_NEIGHBORS[v.index]:
 	if u.index > v.index:
 	    vext.append(u)
 	else:
 	    break
     if vext:
-	extend_subgraph(list_neighbors, vsub, vext, v, k, pat_count, pos_count, patterns, power_table, power_differences_table)
+	extend_subgraph(vsub, vext, v, pat_count, pos_count)
   
   
 def characterize_with_patterns(graph, k):
@@ -318,7 +320,7 @@ def characterize_with_patterns(graph, k):
     while i < length:
         pos_count.append(73*[0])
         i += 1
-    list_neighbors = create_list_neighbors(graph)
+    LIST_NEIGHBORS = create_LIST_NEIGHBORS(graph)
     vsub = Vsub(len(g.vs))
     for v in vs:
       enumerate_from_v(v,pos_count,pat_count,vsub)
@@ -326,7 +328,7 @@ def characterize_with_patterns(graph, k):
  
 def main():
     graph = create_graph(sys.argv[1])
-    LIST_NEIGHBORS = create_list_neighbors(graph)
+    LIST_NEIGHBORS = create_LIST_NEIGHBORS(graph)
     #graph = Graph.Formula("A-B, B-C, C-A, B-D")
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
     #couple = characterize_with_patterns(graph, 5)
