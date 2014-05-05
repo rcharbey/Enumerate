@@ -250,6 +250,10 @@ def calculate_des(index_vsub, length_vsub, neighbors_vsub, power_table):
 
 def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, degree_vsub, des, vext, 
                     v, k, pt, ps, patterns, power_table, power_differences_table):
+    print "vext : ",
+    for vex in vext:
+        print vex.index,
+    print
     if length_vsub > 1:
         index_pattern(vsub, neighbors_vsub, length_vsub, adjacency_matrix_vsub, degree_vsub, des, pt, ps, patterns, power_table, power_differences_table)
         if length_vsub == k:
@@ -315,8 +319,8 @@ def characterize_with_patterns(graph, k):
     return (pt, ps) 
  
 def main():
-    graph = create_graph(sys.argv[1])
-    #graph = Graph.Formula("A-B, B-C, C-A, B-D")
+    #graph = create_graph(sys.argv[1])
+    graph = Graph.Formula("A-B, B-C, C-A, B-D")
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
     couple = characterize_with_patterns(graph, 5)
     print couple[0]
