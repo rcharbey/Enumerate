@@ -207,7 +207,7 @@ def disambiguate1317(pattern_matching, vsub.vertices, vsub.neighbors, vsub.adjac
                     pos_count[vsub.vertices[i].index][pattern_matching[2][vsub.degree[i]]] += 1
                 i += 1
 
-def index_pattern(vsub, pat_count, pos_count, patterns, power_table, power_differences_table):
+def index_pattern(vsub, pat_count, pos_count, patterns, POWER_TABLE, POWER_DIFFERENCES_TABLE):
     pattern_matching = patterns[des]
     if pattern_matching[0] == 2122:
         disambiguate2122(pattern_matching, vsub.vertices, vsub.neighbors, vsub.adjacency_matrix, vsub.degree, pat_count, pos_count)
@@ -247,7 +247,7 @@ def index_pattern(vsub, pat_count, pos_count, patterns, power_table, power_diffe
                 pos_count[vsub.vertices[i].index][pattern_matching[1][vsub.degree[i]]-1] += 1
                 i += 1
        
-def calculate_des(vsub.index, vsub.length, vsub.neighbors, power_table):
+def calculate_des(vsub.index, vsub.length, vsub.neighbors, POWER_TABLE):
     des = 0
     list_of_degrees = [0]*vsub.length
     i = vsub.length-1
@@ -256,7 +256,7 @@ def calculate_des(vsub.index, vsub.length, vsub.neighbors, power_table):
         for neighbor in vsub.neighbors[i]:
             list_of_degrees[vsub.index[neighbor.index]] += 1
             temp += 1
-        des += power_table[temp+list_of_degrees[i]]
+        des += POWER_TABLE[temp+list_of_degrees[i]]
         i -= 1
     return des
 
@@ -276,7 +276,7 @@ def extend_subgraph(vsub, vext, v, pat_count, pos_count):
                 if u_in_vsub != -1 :
                     vsub.neighbors[w_in_vsub].append(u_in_vsub)
                     vsub.degree[w_in_vsub] += 1
-                    des2 += power_differences_table[vsub.degree[u_in_vsub]]
+                    des2 += POWER_DIFFERENCES_TABLE[vsub.degree[u_in_vsub]]
                     vsub.degree[u_in_vsub] += 1
                     vsub.adjacency_matrix[w_in_vsub][u_in_vsub] = True
                 elif not in_neighborhood_vsub.vertices(v, vsub.index, LIST_NEIGHBORS[u.index]):
@@ -286,9 +286,9 @@ def extend_subgraph(vsub, vext, v, pat_count, pos_count):
         vsub.vertices[w_in_vsub] = w
         vsub.index[w.index] = w_in_vsub
         vsub.length += 1
-        vsub.des += des2+power_table[vsub.degree[w_in_vsub]]
+        vsub.des += des2+POWER_TABLE[vsub.degree[w_in_vsub]]
         extend_subgraph(vsub, vext2, v, pat_count, pos_count)
-        vsub.des -= des2+power_table[vsub.degree[w_in_vsub]]
+        vsub.des -= des2+POWER_TABLE[vsub.degree[w_in_vsub]]
         vsub.length -= 1
         vsub.index[w.index] = -1
         for neighbor in vsub.neighbors[w_in_vsub]:
@@ -298,10 +298,7 @@ def extend_subgraph(vsub, vext, v, pat_count, pos_count):
         vsub.neighbors[w_in_vsub] = []
         
         
-def enumerate_from_v(v,pos_count,pat_count,vsub): 
-    patterns = patterns_5.PATTERNS
-    power_table = GLOBAL_POWER_TABLE
-    power_differences_table = GLOBAL_POWER_DIFFERENCES_TABLE
+def enumerate_from_v(v,pos_count,pat_count,vsub):
     vsub.vertices[0] = v
     vsub.length = 1
     vsub.index[v.index] = 0
