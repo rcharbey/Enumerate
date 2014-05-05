@@ -250,17 +250,16 @@ def calculate_des(index_vsub, length_vsub, neighbors_vsub, power_table):
 
 def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, degree_vsub, des, vext, 
                     v, k, pt, ps, patterns, power_table, power_differences_table,niveau):
-    print "vext " + str(niveau) + " :" ,
-    for vex in vext:
-        print vex.index,
-    print
+    #print "vext " + str(niveau) + " :" ,
+    #for vex in vext:
+        #print vex.index,
+    #print
     if length_vsub > 1:
         index_pattern(vsub, neighbors_vsub, length_vsub, adjacency_matrix_vsub, degree_vsub, des, pt, ps, patterns, power_table, power_differences_table)
         if length_vsub == k:
             return
     while vext:
         w = vext.pop()
-        vext2 = list(vext)
         des2 = 0
         for u in list_neighbors[w.index]:
             if u.index >= v.index:
@@ -271,17 +270,18 @@ def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsu
                     degree_vsub[index_vsub[u.index]] += 1
                     adjacency_matrix_vsub[length_vsub][index_vsub[u.index]] = True
                 elif not in_neighborhood_vsub(v, index_vsub, list_neighbors[u.index]):
-                    vext2.append(u)
+                    vext.append(u)
             else:
                 break
         vsub[length_vsub] = w
         index_vsub[w.index] = length_vsub
         extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub+1, index_vsub, adjacency_matrix_vsub, degree_vsub, 
-                        des+des2+power_table[degree_vsub[length_vsub]], vext2, v, k, pt, ps, patterns, power_table, power_differences_table,niveau+1)
+                        des+des2+power_table[degree_vsub[length_vsub]], vext, v, k, pt, ps, patterns, power_table, power_differences_table,niveau+1)
         index_vsub[w.index] = -1
         for neighbor in neighbors_vsub[length_vsub]:
             adjacency_matrix_vsub[length_vsub][neighbor] = False
             degree_vsub[neighbor] -= 1
+        vext.append(w)
         degree_vsub[length_vsub] = 0
         neighbors_vsub[length_vsub] = []
   
