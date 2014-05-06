@@ -90,7 +90,7 @@ def degree_disambiguation(vsub, conflict, referee, dic_pos_count, pos_count):
         else:
             pos_count[vsub.vertices[index_of_conflictual_vertex].index][dic_pos_count[vsub.degree[index_of_conflictual_vertex]][1]-1] += 1
 
-def calculate_neighbors_degree(v, vsub.neighbors, vsub.degree):
+def calculate_neighbors_degree(v, vsub):
     result = 0
     for n in vsub.neighbors[v]:
         result += 1+vsub.degree[n]
@@ -108,7 +108,7 @@ def disambiguate2122(pattern_matching, vsub, pat_count, pos_count):
                 pos_count[vsub.vertices[i].index][52-1] += 1
             i += 1
         return
-    nd = calculate_neighbors_degree(4, vsub.neighbors, vsub.degree)
+    nd = calculate_neighbors_degree(4, vsub)
     if nd == 7:
         pat_count[21-1] += 1
         pos_count[vsub.vertices[4].index][50-1] += 1
@@ -248,7 +248,7 @@ def index_pattern(vsub, pat_count, pos_count):
                 pos_count[vsub.vertices[i].index][pattern_matching[1][vsub.degree[i]]-1] += 1
                 i += 1
        
-def calculate_des(vsub.index, vsub.length, vsub.neighbors):
+def calculate_des(vsub):
     des = 0
     list_of_degrees = [0]*vsub.length
     i = vsub.length-1
@@ -333,8 +333,8 @@ def main():
     LIST_NEIGHBORS = create_LIST_NEIGHBORS(graph)
     #graph = Graph.Formula("A-B, B-C, C-A, B-D")
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
-    #couple = characterize_with_patterns(graph)
-    #print couple[0]
+    couple = characterize_with_patterns(graph)
+    print couple[0]
     #for co in couple[1]:
       #print co
     
