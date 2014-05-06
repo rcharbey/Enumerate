@@ -287,10 +287,10 @@ def extend_subgraph(vsub, vext, pat_count, pos_count, niveau):
         vsub.vertices[w_in_vsub] = w
         vsub.index[w.index] = w_in_vsub
         vsub.length += 1
-        modif_def = des2 + POWER_TABLE[vsub.degree[w_in_vsub]]
-        vsub.des += modif_def
+        modif_des = des2 + POWER_TABLE[vsub.degree[w_in_vsub]]
+        vsub.des += modif_des
         extend_subgraph(vsub, vext2, pat_count, pos_count, niveau+1)
-        vsub.des -= modif_def
+        vsub.des -= modif_des
         vsub.length -= 1
         vsub.index[w.index] = -1
         for neighbor in vsub.neighbors[w_in_vsub]:
