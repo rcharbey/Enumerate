@@ -323,7 +323,7 @@ def characterize_with_patterns(graph):
         pos_count.append(73*[0])
         i += 1
     LIST_NEIGHBORS = create_LIST_NEIGHBORS(graph)
-    vsub = Vsub(len(g.vs))
+    vsub = Vsub(len(graph.vs))
     for v in vs:
       enumerate_from_v(v,pos_count,pat_count,vsub)
     return (pat_count, pos_count) 
