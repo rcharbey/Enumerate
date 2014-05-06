@@ -261,7 +261,15 @@ def calculate_des(vsub):
         i -= 1
     return des
 
-def extend_subgraph(vsub, vext, v, pat_count, pos_count):
+def extend_subgraph(vsub, vext, v, pat_count, pos_count, niveau):
+    print niveau,
+    print " : ",
+    print "vsub : ",
+    for elem in vsub.vertices:
+        print elem.index,
+    print " vext : ",
+    for elem2 in vext:
+        print elem2.index
     if vsub.length > 1:
         index_pattern(vsub, pat_count, pos_count)
         if vsub.length == 5:
@@ -289,7 +297,7 @@ def extend_subgraph(vsub, vext, v, pat_count, pos_count):
         vsub.length += 1
         modif_def = des2 + POWER_TABLE[vsub.degree[w_in_vsub]]
         vsub.des += modif_def
-        extend_subgraph(vsub, vext2, v, pat_count, pos_count)
+        extend_subgraph(vsub, vext2, v, pat_count, pos_count, niveau+1)
         vsub.des -= modif_def
         vsub.length -= 1
         vsub.index[w.index] = -1
@@ -311,7 +319,7 @@ def enumerate_from_v(v,pos_count,pat_count,vsub):
         else:
             break
     if vext:
-        extend_subgraph(vsub, vext, v, pat_count, pos_count)
+        extend_subgraph(vsub, vext, v, pat_count, pos_count, 0)
   
 def characterize_with_patterns(graph):
     vs = graph.vs
