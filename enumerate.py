@@ -209,7 +209,7 @@ def disambiguate1317(pattern_matching, vsub, pat_count, pos_count):
                 i += 1
 
 def index_pattern(vsub, pat_count, pos_count):
-    pattern_matching = patterns[des]
+    pattern_matching = PATTERNS[vsub.des]
     if pattern_matching[0] == 2122:
         disambiguate2122(pattern_matching, vsub, pat_count, pos_count)
     elif pattern_matching[0] == 1317:
@@ -328,8 +328,8 @@ def characterize_with_patterns(graph):
     return (pat_count, pos_count) 
  
 def main():
-    #graph = create_graph(sys.argv[1])
-    graph = Graph.Formula("A-B, B-C, C-A, B-D")
+    graph = create_graph(sys.argv[1])
+    #graph = Graph.Formula("A-B, B-C, C-A, B-D")
     global LIST_NEIGHBORS
     LIST_NEIGHBORS = create_LIST_NEIGHBORS(graph)
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
