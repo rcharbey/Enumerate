@@ -247,19 +247,6 @@ def index_pattern(vsub, pat_count, pos_count):
             while i < vsub.length:
                 pos_count[vsub.vertices[i].index][pattern_matching[1][vsub.degree[i]]-1] += 1
                 i += 1
-       
-def calculate_des(vsub):
-    des = 0
-    list_of_degrees = [0]*vsub.length
-    i = vsub.length-1
-    while i >= 0:
-        temp = 0
-        for neighbor in vsub.neighbors[i]:
-            list_of_degrees[vsub.index[neighbor.index]] += 1
-            temp += 1
-        des += POWER_TABLE[temp+list_of_degrees[i]]
-        i -= 1
-    return des
 
 def extend_subgraph(vsub, vext, pat_count, pos_count, niveau):
     if vsub.length > 1:
