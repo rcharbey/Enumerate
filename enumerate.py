@@ -19,8 +19,8 @@ class Vsub:
     self.adjacency_matrix = [[False]*5]*5
     
 
-GLOBAL_POWER_TABLE = [0, 6, 36, 216, 1296]
-GLOBAL_POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
+POWER_TABLE = [0, 6, 36, 216, 1296]
+POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
 LIST_NEIGHBORS = []
 PATTERNS = patterns_5.PATTERNS
 
