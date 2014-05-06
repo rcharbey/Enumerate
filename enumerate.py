@@ -65,7 +65,7 @@ def create_LIST_NEIGHBORS(graph):
         l.sort(key =lambda vertex: vertex.index,  reverse = True)
     return LIST_NEIGHBORS  
   
-def in_neighborhood_vsub(v, vsub, list_neighbors):
+def in_neighborhood_vsub(vsub, list_neighbors):
     for n in list_neighbors:
         if vsub.index[n.index] != -1:
             return True
@@ -261,7 +261,7 @@ def calculate_des(vsub):
         i -= 1
     return des
 
-def extend_subgraph(vsub, vext, v, pat_count, pos_count, niveau):
+def extend_subgraph(vsub, vext, pat_count, pos_count, niveau):
     if vsub.length > 1:
         index_pattern(vsub, pat_count, pos_count)
         if vsub.length == 5:
@@ -272,7 +272,7 @@ def extend_subgraph(vsub, vext, v, pat_count, pos_count, niveau):
         vext2 = list(vext)
         des2 = 0
         for u in LIST_NEIGHBORS[w.index]:
-            if u.index >= v.index:
+            if u.index >= vsub.vertices[0].index:
                 u_in_vsub = vsub.index[u.index]
                 if u_in_vsub != -1 :
                     vsub.neighbors[w_in_vsub].append(u_in_vsub)
@@ -280,7 +280,7 @@ def extend_subgraph(vsub, vext, v, pat_count, pos_count, niveau):
                     des2 += POWER_DIFFERENCES_TABLE[vsub.degree[u_in_vsub]]
                     vsub.degree[u_in_vsub] += 1
                     vsub.adjacency_matrix[w_in_vsub][u_in_vsub] = True
-                elif not in_neighborhood_vsub(v, vsub, LIST_NEIGHBORS[u.index]):
+                elif not in_neighborhood_vsub(vsub, LIST_NEIGHBORS[u.index]):
                     vext2.append(u)
             else:
                 break
@@ -289,7 +289,7 @@ def extend_subgraph(vsub, vext, v, pat_count, pos_count, niveau):
         vsub.length += 1
         modif_def = des2 + POWER_TABLE[vsub.degree[w_in_vsub]]
         vsub.des += modif_def
-        extend_subgraph(vsub, vext2, v, pat_count, pos_count, niveau+1)
+        extend_subgraph(vsub, vext2, pat_count, pos_count, niveau+1)
         vsub.des -= modif_def
         vsub.length -= 1
         vsub.index[w.index] = -1
@@ -313,7 +313,7 @@ def enumerate_from_v(v,pos_count,pat_count,vsub):
         else:
             break
     if vext:
-        extend_subgraph(vsub, vext, v, pat_count, pos_count, 0)
+        extend_subgraph(vsub, vext, pat_count, pos_count, 0)
   
 def characterize_with_patterns(graph):
     vs = graph.vs
