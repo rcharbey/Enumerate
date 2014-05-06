@@ -9,14 +9,20 @@ sys.path.append("/home/raphael/MPRI/Stage MPRI/sources/patterns/PATTERNS")
 import patterns_5
 
 class Vsub:
-  def __init__(self,length):
-    self.vertices = [None, None, None, None, None]
-    self.neighbors = [[], [], [], [], []]
-    self.degree = [0, 0, 0, 0, 0]
-    self.des = 0
-    self.length = 1
-    self.index = [-1]*length
-    self.adjacency_matrix = [[False]*5]*5
+    def __init__(self,length):
+        self.vertices = [None, None, None, None, None]
+        self.neighbors = [[], [], [], [], []]
+        self.degree = [0, 0, 0, 0, 0]
+        self.des = 0
+        self.length = 1
+        self.index = [-1]*length
+        self.adjacency_matrix = [[False]*5]*5
+
+    def append(self,vertex):
+        self.vertices[self.length] = vertex
+        self.index[vertex.index] = self.length
+        self.length += 1
+        
     
 
 POWER_TABLE = [0, 6, 36, 216, 1296]
@@ -271,9 +277,7 @@ def extend_subgraph(vsub, vext, pat_count, pos_count, niveau):
                     vext2.append(u)
             else:
                 break
-        vsub.vertices[w_in_vsub] = w
-        vsub.index[w.index] = w_in_vsub
-        vsub.length += 1
+        vsub.append(w)
         modif_des = des2 + POWER_TABLE[vsub.degree[w_in_vsub]]
         vsub.des += modif_des
         extend_subgraph(vsub, vext2, pat_count, pos_count, niveau+1)
@@ -288,9 +292,7 @@ def extend_subgraph(vsub, vext, pat_count, pos_count, niveau):
         
         
 def enumerate_from_v(v,pos_count,pat_count,vsub):
-    vsub.vertices[0] = v
-    vsub.length = 1
-    vsub.index[v.index] = 0
+    vsub.append(v)
     vext = []
     if v.index != 0:
         vsub.index[v.index-1] = -1
