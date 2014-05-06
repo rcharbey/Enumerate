@@ -261,7 +261,7 @@ def calculate_des(vsub):
         i -= 1
     return des
 
-def extend_subgraph(vsub, vext, v, pat_count, pos_count):
+def extend_subgraph(vsub, vext, v, pat_count, pos_count, niveau):
     if vsub.length > 1:
         index_pattern(vsub, pat_count, pos_count)
         if vsub.length == 5:
@@ -289,7 +289,7 @@ def extend_subgraph(vsub, vext, v, pat_count, pos_count):
         vsub.length += 1
         modif_def = des2 + POWER_TABLE[vsub.degree[w_in_vsub]]
         vsub.des += modif_def
-        extend_subgraph(vsub, vext2, v, pat_count, pos_count)
+        extend_subgraph(vsub, vext2, v, pat_count, pos_count, niveau+1)
         vsub.des -= modif_def
         vsub.length -= 1
         vsub.index[w.index] = -1
@@ -305,13 +305,15 @@ def enumerate_from_v(v,pos_count,pat_count,vsub):
     vsub.length = 1
     vsub.index[v.index] = 0
     vext = []
+    if v.index != 0:
+        vsub.index[v.index-1] = -1
     for u in LIST_NEIGHBORS[v.index]:
         if u.index > v.index:
             vext.append(u)
         else:
             break
     if vext:
-        extend_subgraph(vsub, vext, v, pat_count, pos_count)
+        extend_subgraph(vsub, vext, v, pat_count, pos_count, 0)
   
 def characterize_with_patterns(graph):
     vs = graph.vs
@@ -329,7 +331,7 @@ def characterize_with_patterns(graph):
  
 def main():
     graph = create_graph(sys.argv[1])
-    #graph = Graph.Formula("A-B, B-C, C-A, B-D")
+    #graph = Graph.Formula("A-B, A-C, A-D, B-C, C-D, C-E, D-E")
     global LIST_NEIGHBORS
     LIST_NEIGHBORS = create_LIST_NEIGHBORS(graph)
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
