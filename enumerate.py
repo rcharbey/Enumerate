@@ -322,8 +322,6 @@ def characterize_with_patterns(graph):
     while i < length:
         pos_count.append(73*[0])
         i += 1
-    LIST_NEIGHBORS = create_LIST_NEIGHBORS(graph)
-    print LIST_NEIGHBORS
     vsub = Vsub(len(graph.vs))
     for v in vs:
       enumerate_from_v(v,pos_count,pat_count,vsub)
@@ -331,8 +329,9 @@ def characterize_with_patterns(graph):
  
 def main():
     #graph = create_graph(sys.argv[1])
-    LIST_NEIGHBORS = create_LIST_NEIGHBORS(graph)
     graph = Graph.Formula("A-B, B-C, C-A, B-D")
+    global LIST_NEIGHBORS
+    LIST_NEIGHBORS = create_LIST_NEIGHBORS(graph)
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
     couple = characterize_with_patterns(graph)
     print couple[0]
