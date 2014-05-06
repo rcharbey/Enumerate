@@ -8,13 +8,14 @@ import profile
 sys.path.append("/home/raphael/MPRI/Stage MPRI/sources/patterns/PATTERNS")
 import patterns_5
 
-class Vsub:
+class Vsub: 
+
     def __init__(self,length):
         self.vertices = [None, None, None, None, None]
         self.neighbors = [[], [], [], [], []]
         self.degree = [0, 0, 0, 0, 0]
         self.des = 0
-        self.length = 1
+        self.length = 0
         self.index = [-1]*length
         self.adjacency_matrix = [[False]*5]*5
 
@@ -22,6 +23,14 @@ class Vsub:
         self.vertices[self.length] = vertex
         self.index[vertex.index] = self.length
         self.length += 1
+        
+    def reset(self, vertex):
+        self.vertices[0] = vertex
+        self.index[vertex.index] = 0
+        self.length = 1
+        self.des = 0
+        if vertex.index != 0:
+            self.index[vertex.index - 1] = -1
         
     
 
@@ -254,7 +263,7 @@ def index_pattern(vsub, pat_count, pos_count):
                 pos_count[vsub.vertices[i].index][pattern_matching[1][vsub.degree[i]]-1] += 1
                 i += 1
 
-def extend_subgraph(vsub, vext, pat_count, pos_count, niveau):
+def extend_subgraph(vsub, vext, pat_count, pos_count):
     if vsub.length > 1:
         index_pattern(vsub, pat_count, pos_count)
         if vsub.length == 5:
@@ -280,7 +289,7 @@ def extend_subgraph(vsub, vext, pat_count, pos_count, niveau):
         vsub.append(w)
         modif_des = des2 + POWER_TABLE[vsub.degree[w_in_vsub]]
         vsub.des += modif_des
-        extend_subgraph(vsub, vext2, pat_count, pos_count, niveau+1)
+        extend_subgraph(vsub, vext2, pat_count, pos_count)
         vsub.des -= modif_des
         vsub.length -= 1
         vsub.index[w.index] = -1
@@ -292,17 +301,15 @@ def extend_subgraph(vsub, vext, pat_count, pos_count, niveau):
         
         
 def enumerate_from_v(v,pos_count,pat_count,vsub):
-    vsub.append(v)
+    vsub.reset(v)
     vext = []
-    if v.index != 0:
-        vsub.index[v.index-1] = -1
     for u in LIST_NEIGHBORS[v.index]:
         if u.index > v.index:
             vext.append(u)
         else:
             break
     if vext:
-        extend_subgraph(vsub, vext, pat_count, pos_count, 0)
+        extend_subgraph(vsub, vext, pat_count, pos_count)
   
 def characterize_with_patterns(graph):
     vs = graph.vs
