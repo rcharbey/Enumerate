@@ -262,15 +262,6 @@ def calculate_des(vsub):
     return des
 
 def extend_subgraph(vsub, vext, v, pat_count, pos_count, niveau):
-    print niveau,
-    print " : ",
-    print "vsub : ",
-    for elem in vsub.vertices[0:vsub.length]:
-        print elem.index,
-    print " vext : ",
-    for elem2 in vext:
-        print elem2.index,
-    print
     if vsub.length > 1:
         index_pattern(vsub, pat_count, pos_count)
         if vsub.length == 5:
@@ -281,22 +272,17 @@ def extend_subgraph(vsub, vext, v, pat_count, pos_count, niveau):
         vext2 = list(vext)
         des2 = 0
         for u in LIST_NEIGHBORS[w.index]:
-            print str(u.index),
-            print in_neighborhood_vsub(v, vsub, LIST_NEIGHBORS[u.index]),
             if u.index >= v.index:
                 u_in_vsub = vsub.index[u.index]
                 if u_in_vsub != -1 :
-                    print " in vsub"
                     vsub.neighbors[w_in_vsub].append(u_in_vsub)
                     vsub.degree[w_in_vsub] += 1
                     des2 += POWER_DIFFERENCES_TABLE[vsub.degree[u_in_vsub]]
                     vsub.degree[u_in_vsub] += 1
                     vsub.adjacency_matrix[w_in_vsub][u_in_vsub] = True
                 elif not in_neighborhood_vsub(v, vsub, LIST_NEIGHBORS[u.index]):
-                    print " not in vsub"
                     vext2.append(u)
             else:
-                print "pas utile"
                 break
         vsub.vertices[w_in_vsub] = w
         vsub.index[w.index] = w_in_vsub
@@ -319,6 +305,8 @@ def enumerate_from_v(v,pos_count,pat_count,vsub):
     vsub.length = 1
     vsub.index[v.index] = 0
     vext = []
+    if v.index != 0:
+        vsub.index[v.index-1] = -1
     for u in LIST_NEIGHBORS[v.index]:
         if u.index > v.index:
             vext.append(u)
@@ -342,14 +330,10 @@ def characterize_with_patterns(graph):
     return (pat_count, pos_count) 
  
 def main():
-    #graph = create_graph(sys.argv[1])
-    graph = Graph.Formula("A-B, A-C, A-D, B-C, C-D, C-E, D-E")
+    graph = create_graph(sys.argv[1])
+    #graph = Graph.Formula("A-B, A-C, A-D, B-C, C-D, C-E, D-E")
     global LIST_NEIGHBORS
     LIST_NEIGHBORS = create_LIST_NEIGHBORS(graph)
-    for l in LIST_NEIGHBORS:
-        for ll in l:
-            print ll.index,
-        print
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
     couple = characterize_with_patterns(graph)
     print couple[0]
