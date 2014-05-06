@@ -286,9 +286,10 @@ def extend_subgraph(vsub, vext, v, pat_count, pos_count):
         vsub.vertices[w_in_vsub] = w
         vsub.index[w.index] = w_in_vsub
         vsub.length += 1
-        vsub.des += des2+POWER_TABLE[vsub.degree[w_in_vsub]]
+        modif_def = des2 + POWER_TABLE[vsub.degree[w_in_vsub]]
+        vsub.des += modif_def
         extend_subgraph(vsub, vext2, v, pat_count, pos_count)
-        vsub.des -= des2+POWER_TABLE[vsub.degree[w_in_vsub]]
+        vsub.des -= modif_def
         vsub.length -= 1
         vsub.index[w.index] = -1
         for neighbor in vsub.neighbors[w_in_vsub]:
@@ -304,13 +305,12 @@ def enumerate_from_v(v,pos_count,pat_count,vsub):
     vsub.index[v.index] = 0
     vext = []
     for u in LIST_NEIGHBORS[v.index]:
-	if u.index > v.index:
-	    vext.append(u)
-	else:
-	    break
+        if u.index > v.index:
+            vext.append(u)
+        else:
+            break
     if vext:
-	extend_subgraph(vsub, vext, v, pat_count, pos_count)
-  
+        extend_subgraph(vsub, vext, v, pat_count, pos_count)
   
 def characterize_with_patterns(graph, k):
     vs = graph.vs
