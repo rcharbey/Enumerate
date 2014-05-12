@@ -7,6 +7,7 @@ import json
 import profile
 sys.path.append("/home/raphael/MPRI/Stage MPRI/sources/patterns/PATTERNS")
 import patterns_5
+import time
 
 class Vsub: 
 
