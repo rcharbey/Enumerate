@@ -267,8 +267,6 @@ def index_pattern(vsub, pat_count, pos_count):
 def extend_subgraph(vsub, vext, pat_count, pos_count):
     if vsub.length > 1:
         index_pattern(vsub, pat_count, pos_count)
-        if vsub.length == 5:
-            return
     while vext:
         w = vext.pop()
         w_in_vsub = vsub.length
@@ -290,7 +288,10 @@ def extend_subgraph(vsub, vext, pat_count, pos_count):
         vsub.append(w)
         modif_des = des2 + POWER_TABLE[vsub.degree[w_in_vsub]]
         vsub.des += modif_des
-        extend_subgraph(vsub, vext2, pat_count, pos_count)
+        if vsub.length != 5:
+            extend_subgraph(vsub, vext2, pat_count, pos_count)
+        else:
+            index_pattern(vsub, pat_count, pos_count)
         vsub.des -= modif_des
         vsub.length -= 1
         vsub.index[w.index] = -1
