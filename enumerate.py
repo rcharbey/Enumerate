@@ -252,8 +252,6 @@ def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsu
                     v, k, pt, ps, patterns, power_table, power_differences_table):
     if length_vsub > 1:
         index_pattern(vsub, neighbors_vsub, length_vsub, adjacency_matrix_vsub, degree_vsub, des, pt, ps, patterns, power_table, power_differences_table)
-        if length_vsub == k:
-            return
     while vext:
         w = vext.pop()
         vext2 = list(vext)
@@ -272,8 +270,11 @@ def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsu
                 break
         vsub[length_vsub] = w
         index_vsub[w.index] = length_vsub
-        extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub+1, index_vsub, adjacency_matrix_vsub, degree_vsub, 
+        if length_vsub != k-1:
+            extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub+1, index_vsub, adjacency_matrix_vsub, degree_vsub, 
                         des+des2+power_table[degree_vsub[length_vsub]], vext2, v, k, pt, ps, patterns, power_table, power_differences_table)
+        else :
+            index_pattern(vsub, neighbors_vsub, length_vsub + 1, adjacency_matrix_vsub, degree_vsub, des+des2+power_table[degree_vsub[length_vsub]], pt, ps, patterns, power_table, power_differences_table)  
         index_vsub[w.index] = -1
         for neighbor in neighbors_vsub[length_vsub]:
             adjacency_matrix_vsub[length_vsub][neighbor] = False
@@ -316,7 +317,7 @@ def characterize_with_patterns(graph, k):
  
 def main():
     graph = create_graph(sys.argv[1])
-    #graph = Graph.Formula("A-B, B-C, C-A, B-D")
+    #graph = Graph.Formula("A-B, A-C, B-C, B-D, C-D, C-E, D-F ")
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
     couple = characterize_with_patterns(graph, 5)
     print couple[0]
