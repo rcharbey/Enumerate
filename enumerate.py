@@ -15,6 +15,7 @@ class Vsub:
         self.vertices = [None, None, None, None, None]
         self.neighbors = [[], [], [], [], []]
         self.degree = [0, 0, 0, 0, 0]
+        self.neighbor_degree = [0, 0, 0, 0, 0]
         self.des = 0
         self.length = 0
         self.index = [-1]*length
@@ -39,7 +40,9 @@ POWER_TABLE = [0, 6, 36, 216, 1296]
 POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
 LIST_NEIGHBORS = []
 PATTERNS = patterns_5.PATTERNS
-EVOLUTION = patterns_5.EVOLUTION
+EVOLUTION_PAT = patterns_5.EVOLUTION_PAT
+EVOLUTION_POS = patterns_5.EVOLUTION_POS
+NEIGHBORS_DEGREE_TO_POS = patterns_5.NEIGHBORS_DEGREE_TO_POS
 
 def create_graph(name):
     path = "./FBSAMPLE/"+name+"/friends.jsons"
@@ -225,46 +228,6 @@ def disambiguate1317(pattern_matching, vsub, pat_count, pos_count):
                     pos_count[vsub.vertices[i].index][pattern_matching[2][vsub.degree[i]]] += 1
                 i += 1
 
-def index_pattern(vsub, pat_count, pos_count):
-    pattern_matching = PATTERNS[vsub.des]
-    if pattern_matching[0] == 2122:
-        disambiguate2122(pattern_matching, vsub, pat_count, pos_count)
-    elif pattern_matching[0] == 1317:
-        disambiguate1317(pattern_matching, vsub, pat_count, pos_count)
-    else:
-        pat_count[pattern_matching[0]-1] += 1
-        if pattern_matching[0] == 10:
-            i = 0
-            list_of_conflictual_vertices = []
-            index_of_referee1 = -1
-            index_of_referee2 = -1
-            while i < vsub.length:
-                if vsub.degree[i] == 2:
-                    list_of_conflictual_vertices.append(i)
-                else:
-                    if index_of_referee1 == -1:
-                        index_of_referee1 = i
-                    else:
-                        index_of_referee2 = i
-                pos_count[vsub.vertices[i].index][pattern_matching[1][1]-1] += 1
-                i += 1
-            for index_of_conflictual_vertex in list_of_conflictual_vertices:
-                if vsub.adjacency_matrix[index_of_conflictual_vertex][index_of_referee1] or vsub.adjacency_matrix[index_of_referee1][index_of_conflictual_vertex] or vsub.adjacency_matrix[index_of_referee2][index_of_conflictual_vertex] or vsub.adjacency_matrix[index_of_conflictual_vertex][index_of_referee2]:
-                    pos_count[vsub.vertices[index_of_conflictual_vertex].index][pattern_matching[1][vsub.degree[index_of_conflictual_vertex]][0]-1] += 1
-                else:
-                    pos_count[vsub.vertices[index_of_conflictual_vertex].index][pattern_matching[1][vsub.degree[index_of_conflictual_vertex]][1]-1] += 1
-        elif pattern_matching[0] == 12:
-            degree_disambiguation(vsub, 1, 2, pattern_matching[1], pos_count)
-        elif pattern_matching[0] == 18:
-            degree_disambiguation(vsub, 3, 1, pattern_matching[1], pos_count)
-        elif pattern_matching[0] == 26:
-            degree_disambiguation(vsub, 3, 1, pattern_matching[1], pos_count)
-        else:
-            i = 0
-            while i < vsub.length:
-                pos_count[vsub.vertices[i].index][pattern_matching[1][vsub.degree[i]]-1] += 1
-                i += 1
-
 def calculate_evolution(vsub):
     v_in_vsub = vsub.length-1
     sum_neighbors_degree = 0
@@ -272,13 +235,28 @@ def calculate_evolution(vsub):
     for n in vsub.neighbors[v_in_vsub]:
         sum_neighbors_degree += 5**(n.degree()-1)
         for n2 in n.neighbors():
-            if n2.index > n.index and vsub.adjacency_matrix[n2][n]
+            if n2.index > n.index and vsub.adjacency_matrix[n2][n]:
                 nb_of_edges += 1
-    return sum_neighbors_degree + nb_of_edges + len(vsub.neighbors[v_in_vsub]
+    return sum_neighbors_degree + nb_of_edges + len(vsub.neighbors[v_in_vsub])              
+                
+def index_pattern(vsub, current_pattern, pat_count, pos_count):
+    c_e = calculate_evolution(vsub)
+    pat_count[c_e-1] += 1
+    new_pattern = EVOLUTION[current_pattern][c_e]
+    i = 0
+    while i < vsub.length - 1:
+        if vsub.adjacency_matrix[vsub.length - 1][i]:
+            vsub.neighbor_degree[i] = new_pattern[1][vsub.neighbor_degree[i]][1]
+        else:
+            vsub.neighbor_degree[i] = new_pattern[1][vsub.neighbor_degree[i]][0]
+        pos_count[vsub.vertices[i].index][NEIGHBORS_DEGREE_TO_POS[vsub.neighbor_degree[i]]] += 1
+    vsub.neighbor_degree[vsub.length - 1] = new_pattern[0]
+    pos_count[vsub.vertices[length - 1].index][NEIGHBORS_DEGREE_TO_POS[vsub.neighbor_degree[length - 1]]] += 1
+    return c_e
     
-def extend_subgraph(vsub, vext, pat_count, pos_count):
+def extend_subgraph(vsub, vext, current_pattern, pat_count, pos_count):
     if vsub.length > 1:
-        index_pattern(vsub, pat_count, pos_count)
+        current_pattern2 = index_pattern(vsub, current_pattern, pat_count, pos_count)
     while vext:
         w = vext.pop()
         w_in_vsub = vsub.length
