@@ -265,6 +265,17 @@ def index_pattern(vsub, pat_count, pos_count):
                 pos_count[vsub.vertices[i].index][pattern_matching[1][vsub.degree[i]]-1] += 1
                 i += 1
 
+def calculate_evolution(vsub):
+    v_in_vsub = vsub.length-1
+    sum_neighbors_degree = 0
+    nb_of_edges = 0
+    for n in vsub.neighbors[v_in_vsub]:
+        sum_neighbors_degree += 5**(n.degree()-1)
+        for n2 in n.neighbors():
+            if n2.index > n.index and vsub.adjacency_matrix[n2][n]
+                nb_of_edges += 1
+    return sum_neighbors_degree + nb_of_edges + len(vsub.neighbors[v_in_vsub]
+    
 def extend_subgraph(vsub, vext, pat_count, pos_count):
     if vsub.length > 1:
         index_pattern(vsub, pat_count, pos_count)
