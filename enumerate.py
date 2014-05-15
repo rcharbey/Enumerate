@@ -39,6 +39,7 @@ POWER_TABLE = [0, 6, 36, 216, 1296]
 POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
 LIST_NEIGHBORS = []
 PATTERNS = patterns_5.PATTERNS
+EVOLUTION = patterns_5.EVOLUTION
 
 def create_graph(name):
     path = "./FBSAMPLE/"+name+"/friends.jsons"
