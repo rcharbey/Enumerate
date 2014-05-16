@@ -321,9 +321,7 @@ def main():
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
     couple = characterize_with_patterns(graph, 5)
     print couple[0]
-    #for co in couple[1]:
-      #print co
+    return couple
     
-#profile.run('main()')
 main()
 
