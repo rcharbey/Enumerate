@@ -15,7 +15,7 @@ class Vsub:
         self.vertices = [None, None, None, None, None]
         self.neighbors = [[], [], [], [], []]
         self.degree = [0, 0, 0, 0, 0]
-        self.neighbor_degree = [0, 0, 0, 0, 0]
+        self.neighbor_degree = [2, 2, 0, 0, 0]
         self.des = 0
         self.length = 0
         self.index = [-1]*length
@@ -232,31 +232,39 @@ def calculate_evolution(vsub):
     v_in_vsub = vsub.length-1
     sum_neighbors_degree = 0
     nb_of_edges = 0
-    for n in vsub.neighbors[v_in_vsub]:
-        sum_neighbors_degree += 5**(n.degree()-1)
-        for n2 in n.neighbors():
+    for n_in_vsub in vsub.neighbors[v_in_vsub]:
+        n = vsub.vertices[n_in_vsub]
+        sum_neighbors_degree += 5**(vsub.degree[n_in_vsub]-1)
+        for n2_in_vsub in vsub.neighbors[n_in_vsub]:
+            n2 = vsub.vertices[n2_in_vsub]
             if n2.index > n.index and vsub.adjacency_matrix[n2][n]:
                 nb_of_edges += 1
     return sum_neighbors_degree + nb_of_edges + len(vsub.neighbors[v_in_vsub])              
                 
 def index_pattern(vsub, current_pattern, pat_count, pos_count):
-    c_e = calculate_evolution(vsub)
-    pat_count[c_e-1] += 1
-    new_pattern = EVOLUTION[current_pattern][c_e]
+    evolution = calculate_evolution(vsub)
+    print "evolution : " + str(evolution),
+    print " current_pattern : " + str(current_pattern),
+    new_pattern = EVOLUTION_PAT[current_pattern][evolution]
+    print " new_pattern : " + str(new_pattern)
+    pat_count[new_pattern - 1] += 1
+    new_pos = EVOLUTION_POS[current_pattern][new_pattern]
     i = 0
     while i < vsub.length - 1:
         if vsub.adjacency_matrix[vsub.length - 1][i]:
-            vsub.neighbor_degree[i] = new_pattern[1][vsub.neighbor_degree[i]][1]
+            vsub.neighbor_degree[i] = new_pos[1][vsub.neighbor_degree[i]][1]
         else:
-            vsub.neighbor_degree[i] = new_pattern[1][vsub.neighbor_degree[i]][0]
-        pos_count[vsub.vertices[i].index][NEIGHBORS_DEGREE_TO_POS[vsub.neighbor_degree[i]]] += 1
-    vsub.neighbor_degree[vsub.length - 1] = new_pattern[0]
-    pos_count[vsub.vertices[length - 1].index][NEIGHBORS_DEGREE_TO_POS[vsub.neighbor_degree[length - 1]]] += 1
-    return c_e
+            vsub.neighbor_degree[i] = new_pos[1][vsub.neighbor_degree[i]][0]
+        pos_count[vsub.vertices[i].index][NEIGHBORS_DEGREE_TO_POS[new_pattern - 1][vsub.neighbor_degree[i]]] += 1
+        i += 1
+    vsub.neighbor_degree[vsub.length - 1] = new_pos[0]
+    pos_count[vsub.vertices[vsub.length - 1].index][NEIGHBORS_DEGREE_TO_POS[new_pattern - 1][vsub.neighbor_degree[vsub.length - 1]]] += 1
+    return evolution
     
 def extend_subgraph(vsub, vext, current_pattern, pat_count, pos_count):
+    neighbor_degree2 = list(vsub.neighbor_degree)
     if vsub.length > 1:
-        current_pattern2 = index_pattern(vsub, current_pattern, pat_count, pos_count)
+        current_pattern = index_pattern(vsub, current_pattern, pat_count, pos_count)
     while vext:
         w = vext.pop()
         w_in_vsub = vsub.length
@@ -278,10 +286,11 @@ def extend_subgraph(vsub, vext, current_pattern, pat_count, pos_count):
         vsub.append(w)
         modif_des = des2 + POWER_TABLE[vsub.degree[w_in_vsub]]
         vsub.des += modif_des
-        if vsub.length != 5:
-            extend_subgraph(vsub, vext2, pat_count, pos_count)
+        if vsub.length != 4:
+            extend_subgraph(vsub, vext2, current_pattern, pat_count, pos_count)
         else:
-            index_pattern(vsub, pat_count, pos_count)
+            index_pattern(vsub, current_pattern, pat_count, pos_count)
+        vsub.neighbor_degree = neighbor_degree2
         vsub.des -= modif_des
         vsub.length -= 1
         vsub.index[w.index] = -1
@@ -301,7 +310,7 @@ def enumerate_from_v(v,pos_count,pat_count,vsub):
         else:
             break
     if vext:
-        extend_subgraph(vsub, vext, pat_count, pos_count)
+        extend_subgraph(vsub, vext, 1, pat_count, pos_count)
   
 def characterize_with_patterns(graph):
     vs = graph.vs
