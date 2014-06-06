@@ -12,7 +12,7 @@ GLOBAL_POWER_TABLE = [0, 6, 36, 216, 1296]
 GLOBAL_POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
 
 def create_graph(name):
-    path = "./FBSAMPLE/"+name+"/friends.jsons"
+    path = "./data/"+name+"/friends.jsons"
     f = open(path, 'r')
     list_of_edges = []
     index_to_vertex = {}
@@ -130,7 +130,7 @@ def disambiguate2122(pattern_matching, vsub, neighbors_vsub, adjacency_matrix_vs
     pt[22-1] += 1
     i = 0
     while i <= 4:
-        ps[vsub[i].index][pattern_matching[2][degree_vsub[i]]] += 1
+        ps[vsub[i].index][pattern_matching[2][degree_vsub[i]]-1] += 1
         i += 1
     
 def disambiguate1317(pattern_matching, vsub, neighbors_vsub, adjacency_matrix_vsub, degree_vsub, pt, ps):
@@ -157,7 +157,7 @@ def disambiguate1317(pattern_matching, vsub, neighbors_vsub, adjacency_matrix_vs
                 else:
                     ps[vsub[i].index][26-1] += 1
             else:
-                ps[vsub[i].index][pattern_matching[2][degree_vsub[i]]] += 1
+                ps[vsub[i].index][pattern_matching[2][degree_vsub[i]]-1] += 1
             i += 1
     else:
         pt[17-1] += 1
@@ -169,7 +169,7 @@ def disambiguate1317(pattern_matching, vsub, neighbors_vsub, adjacency_matrix_vs
                     if degree_vsub[i] == 2:
                         ps[vsub[i].index][38-1] += 1
                     else:
-                        ps[vsub[i].index][pattern_matching[2][degree_vsub[i]]] += 1
+                        ps[vsub[i].index][pattern_matching[2][degree_vsub[i]]-1] += 1
                     i += 1
             else:
                 ps[vsub[4].index][38-1] += 1
@@ -181,7 +181,7 @@ def disambiguate1317(pattern_matching, vsub, neighbors_vsub, adjacency_matrix_vs
                         else:
                             ps[vsub[i].index][38-1] += 1
                     else:
-                        ps[vsub[i].index][pattern_matching[2][degree_vsub[i]]] += 1
+                        ps[vsub[i].index][pattern_matching[2][degree_vsub[i]]-1] += 1
                     i += 1
         else:
             i = 0
@@ -192,7 +192,7 @@ def disambiguate1317(pattern_matching, vsub, neighbors_vsub, adjacency_matrix_vs
                     else:
                         ps[vsub[i].index][37-1] += 1
                 else:
-                    ps[vsub[i].index][pattern_matching[2][degree_vsub[i]]] += 1
+                    ps[vsub[i].index][pattern_matching[2][degree_vsub[i]]-1] += 1
                 i += 1
 
 def index_pattern(vsub, neighbors_vsub, length_vsub, adjacency_matrix_vsub, degree_vsub, des, pt, ps, patterns, power_table, power_differences_table):
@@ -317,11 +317,11 @@ def characterize_with_patterns(graph, k):
  
 def main():
     graph = create_graph(sys.argv[1])
-    #graph = Graph.Formula("A-B, A-C, B-C, B-D, C-D, C-E, D-F ")
+    #graph = Graph.Formula(" A-B, A-C, A-D, A-E, B-C, C-D, C-F, D-E, D-F, D-G, E-G, E-H, F-G, G-H ")
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
     couple = characterize_with_patterns(graph, 5)
     print couple[0]
     return couple
-    
-main()
 
+
+main()
