@@ -156,69 +156,36 @@ def calculate_neighbors_degree(v, neighbors_vsub, degree_vsub):
         result += 1+degree_vsub[n]
     return result
 
-def index_pattern(vsub, neighbors_vsub, length_vsub, adjacency_matrix_vsub, degree_vsub, des, pt, ps, patterns, power_table, power_differences_table):
-    pattern_matching = patterns[des]
-    if pattern_matching[0] == 2122:
-        disambiguate2122(pattern_matching, vsub, neighbors_vsub, adjacency_matrix_vsub, degree_vsub, pt, ps)
-    elif pattern_matching[0] == 1317:
-        disambiguate1317(pattern_matching, vsub, neighbors_vsub, adjacency_matrix_vsub, degree_vsub, pt, ps)
-    else:
-        pt[pattern_matching[0]-1] += 1
-        if pattern_matching[0] == 10:
-            i = 0
-            list_of_conflictual_vertices = []
-            index_of_referee1 = -1
-            index_of_referee2 = -1
-            while i < length_vsub:
-                if degree_vsub[i] == 2:
-                    list_of_conflictual_vertices.append(i)
-                else:
-                    if index_of_referee1 == -1:
-                        index_of_referee1 = i
-                    else:
-                        index_of_referee2 = i
-                ps[vsub[i].index][pattern_matching[1][1]-1] += 1
-                i += 1
-            for index_of_conflictual_vertex in list_of_conflictual_vertices:
-                if adjacency_matrix_vsub[index_of_conflictual_vertex][index_of_referee1] or adjacency_matrix_vsub[index_of_referee1][index_of_conflictual_vertex] or adjacency_matrix_vsub[index_of_referee2][index_of_conflictual_vertex] or adjacency_matrix_vsub[index_of_conflictual_vertex][index_of_referee2]:
-                    ps[vsub[index_of_conflictual_vertex].index][pattern_matching[1][degree_vsub[index_of_conflictual_vertex]][0]-1] += 1
-                else:
-                    ps[vsub[index_of_conflictual_vertex].index][pattern_matching[1][degree_vsub[index_of_conflictual_vertex]][1]-1] += 1
-        elif pattern_matching[0] == 12:
-            degree_disambiguation(vsub, length_vsub, adjacency_matrix_vsub, 1, 2, degree_vsub, pattern_matching[1], ps)
-        elif pattern_matching[0] == 18:
-            degree_disambiguation(vsub, length_vsub, adjacency_matrix_vsub, 3, 1, degree_vsub, pattern_matching[1], ps)
-        elif pattern_matching[0] == 26:
-            degree_disambiguation(vsub, length_vsub, adjacency_matrix_vsub, 3, 1, degree_vsub, pattern_matching[1], ps)
-        else:
-            i = 0
-            while i < length_vsub:
-                ps[vsub[i].index][pattern_matching[1][degree_vsub[i]]-1] += 1
-                i += 1
-
+def index_patternd(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub, pt, ps):
+    dict_temp = DICT[id_vsub][str(classes_neighbors_new)]
+    new_id_vsub = dict_temp[0]
+    pt[new_id_vsub] += 1
+    new_classes_vsub = []
+    i = 0
+    while i < length_vsub-1:
+        new_classes_vsub.append(dict_temp[2][classe+1])
+        i += 1
+    new_classes_vsub.append(dict_temp[1])
+    return (new_id_vsub,new_classes_vsub)
+    
 
 def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, degree_vsub, des, vext, 
                     v, k, pt, ps, patterns, power_table, power_differences_table):
     if length_vsub > 1:
-        index_pattern(vsub, neighbors_vsub, length_vsub, adjacency_matrix_vsub, degree_vsub, des, pt, ps, patterns, power_table, power_differences_table)
+        couple = index_pattern(vsub, id_vsub, classes_vsub, pt, ps)
     while vext:
         w = vext.pop()
         vext2 = list(vext)
-        des2 = 0
+        classes_neighbors_new = []
         for u in list_neighbors[w.index]:
             if u.index >= v.index:
-                if not index_vsub[u.index] == -1 :
-                    neighbors_vsub[length_vsub].append(index_vsub[u.index])
-                    degree_vsub[length_vsub] += 1
-                    des2 += power_differences_table[degree_vsub[index_vsub[u.index]]]
-                    degree_vsub[index_vsub[u.index]] += 1
-                    adjacency_matrix_vsub[length_vsub][index_vsub[u.index]] = True
-                elif not in_neighborhood_vsub(v, index_vsub, list_neighbors[u.index]):
+                if index_vsub[u.index] == -1 and not in_neighborhood_vsub(v, index_vsub, list_neighbors[u.index]):
                     vext2.append(u)
             else:
                 break
         vsub[length_vsub] = w
         index_vsub[w.index] = length_vsub
+        couple = index_pattern(vsub, id_vsub, classes_vsub, pt, ps)
         if length_vsub != k-1:
             extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub+1, index_vsub, adjacency_matrix_vsub, degree_vsub, 
                         des+des2+power_table[degree_vsub[length_vsub]], vext2, v, k, pt, ps, patterns, power_table, power_differences_table)
