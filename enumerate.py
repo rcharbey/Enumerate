@@ -8,99 +8,99 @@ import profile
 sys.path.append("/home/raphael/MPRI/Stage MPRI/sources/patterns/PATTERNS")
 import patterns_5
 
-GLOBAL_POWER_TABLE = [0, 6, 36, 216, 1296]
-GLOBAL_POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
-
 DICT = [
-{
-    "1 ":(2,2,[(1,2])),
-    "1,1 ":(3,1,[(1,1])),
-}
-,
-{
-    "2":(4,1,[(2,2),(2,4])),
-    "2,2":(7,1,[(1,1),(1,1])),
-    "1":(5,2,[(1,1),(2,2])),
-    "1,2":(6,1,[(2,2),(1,3])),
-    "1,2,2":(8,2,[(2,2),(1,1])),
-}
-,
-{
-    "1":(6,3,[(2,1])),
-    "1,1":(8,1,[(2,1])),
-    "1,1,1":(9,1,[(1,1])),
-}
-,
-{
-    "4":(10,5,[(1,1),(2,2),(3,3),(4,4])),
-    "3":(12,2,[(4,4),(3,3),(5,5),(2,2])),
-    "3,4":(13,1,[(4,4),(3,3),(2,2),(1,1])),
-    "2":(12,2,[(2,2),(1,1),(3,3),(4,4])),
-    "2,4":(17,3,[(1,1),(2,2),(3,3),(4,4])),
-    "2,3":(14,3,[(1,1),(2,2),(4,4),(5,5])),
-    "2,3,4":(18,3,[(1,1),(2,2),(3,3),(4,4])),
-    "1":(10,1,[(2,2),(3,3),(4,4),(5,5])),
-    "1,4":(16,5,[(1,1),(2,2),(3,3),(4,4])),
-    "1,3":(17,3,[(4,4),(3,3),(2,2),(5,5])),
-    "1,3,4":(21,2,[(4,4),(5,5),(3,3),(1,1])),
-    "1,2":(13,1,[(1,1),(2,2),(3,3),(4,4])),
-    "1,2,4":(21,2,[(1,1),(3,3),(5,5),(4,4])),
-    "1,2,3":(18,3,[(4,4),(3,3),(2,2),(1,1])),
-    "1,2,3,4":(24,5,[(1,1),(2,2),(3,3),(4,4])),
-}
-,
-{
-    "2":(12,4,[(1,1),(3,2])),
-    "2,2":(17,4,[(2,2),(3,1])),
-    "2,2,2":(22,1,[(2,2),(1,1])),
-    "1":(11,2,[(1,1),(2,2])),
-    "1,2":(15,2,[(3,3),(1,2])),
-    "1,2,2":(19,4,[(2,2),(3,1])),
-    "1,2,2,2":(25,1,[(1,1),(2,2])),
-}
-,
-{
-    "3":(13,4,[(1,1),(2,2),(3,3])),
-    "2":(15,2,[(1,1),(3,3),(2,2])),
-    "2,3":(20,3,[(1,1),(2,2),(3,3])),
-    "1":(14,1,[(2,3),(4,4),(5,5])),
-    "1,3":(21,5,[(3,1),(2,2),(4,4])),
-    "1,2":(19,3,[(4,3),(2,2),(1,1])),
-    "1,2,3":(24,3,[(2,1),(5,5),(4,4])),
-    "1,1":(18,4,[(3,3),(2,2),(1,1])),
-    "1,1,3":(26,2,[(3,3),(2,2),(1,1])),
-    "1,1,2":(23,3,[(3,3),(2,2),(1,1])),
-    "1,1,2,3":(28,3,[(2,2),(3,3),(1,1])),
-}
-,
-{
-    "2":(17,1,[(3,3),(2,4])),
-    "2,2":(22,1,[(1,1),(2,2])),
-    "1":(17,1,[(2,4),(3,3])),
-    "1,2":(21,1,[(2,5),(3,4])),
-    "1,2,2":(26,3,[(3,1),(2,2])),
-    "1,1":(22,1,[(2,2),(1,1])),
-    "1,1,2":(26,3,[(2,2),(3,1])),
-    "1,1,2,2":(27,3,[(1,1),(2,2])),
-}
-,
-{
-    "2":(19,1,[(3,3),(2,4])),
-    "2,2":(25,2,[(2,2),(1,1])),
-    "1":(18,1,[(2,4),(3,3])),
-    "1,2":(24,4,[(3,1),(2,3])),
-    "1,2,2":(28,2,[(2,1),(3,3])),
-    "1,1":(26,1,[(2,2),(3,3])),
-    "1,1,2":(27,1,[(2,2),(3,1])),
-    "1,1,2,2":(29,2,[(1,1),(2,2])),
-}
-,
-{
-    "1":(23,1,[(2,3])),
-    "1,1":(28,1,[(3,2])),
-    "1,1,1":(29,1,[(2,1])),
-    "1,1,1,1":(30,1,[(1,1])),
-}
+    {   "[1]":(1,1,[(1,1)]) #0
+    }
+    ,
+    {
+        "[1]":(2,2,[(1,2)]), #1
+        "[1, 1]":(3,1,[(1,1)])
+    }
+    ,
+    {
+        "[2]":(4,1,[(3,3),(2,4)]), #2
+        "[2, 2]":(7,1,[(1,1),(2,2)]),
+        "[1]":(5,2,[(1,1),(2,2)]),
+        "[1, 2]":(6,1,[(2,2),(1,3)]),
+        "[1, 2, 2]":(8,2,[(2,2),(1,1)])
+    }
+    ,
+    {
+        "[1]":(6,3,[(2,1)]), #3
+        "[1, 1]":(8,1,[(2,1)]),
+        "[1, 1, 1]":(9,1,[(1,1)])
+    }
+    ,
+    {
+        "[4]":(10,5,[(1,1),(2,2),(3,3),(4,4)]), #4
+        "[3]":(12,2,[(4,4),(3,3),(5,5),(2,2)]),
+        "[3, 4]":(13,1,[(4,4),(3,3),(2,2),(1,1)]),
+        "[2]":(12,2,[(2,2),(1,1),(3,3),(4,4)]),
+        "[2, 4]":(17,3,[(1,1),(2,2),(3,3),(4,4)]),
+        "[2, 3]":(14,3,[(1,1),(2,2),(4,4),(5,5)]),
+        "[2, 3, 4]":(18,3,[(1,1),(2,2),(3,3),(4,4)]),
+        "[1]":(10,1,[(2,2),(3,3),(4,4),(5,5)]),
+        "[1, 4]":(16,5,[(1,1),(2,2),(3,3),(4,4)]),
+        "[1, 3]":(17,3,[(4,4),(3,3),(2,2),(5,5)]),
+        "[1, 3, 4]":(21,2,[(4,4),(5,5),(3,3),(1,1)]),
+        "[1, 2]":(13,1,[(1,1),(2,2),(3,3),(4,4)]),
+        "[1, 2, 4]":(21,2,[(1,1),(3,3),(5,5),(4,4)]),
+        "[1, 2, 3]":(18,3,[(4,4),(3,3),(2,2),(1,1)]),
+        "[1, 2, 3, 4]":(24,5,[(1,1),(2,2),(3,3),(4,4)])
+    }
+    ,
+    {
+        "[2]":(12,4,[(1,1),(3,2)]), #5
+        "[2, 2]":(17,4,[(2,2),(3,1)]),
+        "[2, 2, 2]":(22,1,[(2,2),(1,1)]),
+        "[1]":(11,2,[(1,1),(2,2)]),
+        "[1, 2]":(15,2,[(3,3),(1,2)]),
+        "[1, 2, 2]":(19,4,[(2,2),(3,1)]),
+        "[1, 2, 2, 2]":(25,1,[(1,1),(2,2)])
+    }
+    ,
+    {
+        "[3]":(13,4,[(1,1),(2,2),(3,3)]), #6
+        "[2]":(15,2,[(1,1),(3,3),(2,2)]),
+        "[2, 3]":(20,3,[(1,1),(2,2),(3,3)]),
+        "[1]":(14,1,[(2,3),(4,4),(5,5)]),
+        "[1, 3]":(21,5,[(3,1),(2,2),(4,4)]),
+        "[1, 2]":(19,3,[(4,3),(2,2),(1,1)]),
+        "[1, 2, 3]":(24,3,[(2,1),(5,5),(4,4)]),
+        "[1, 1]":(18,4,[(3,3),(2,2),(1,1)]),
+        "[1, 1, 3]":(26,2,[(3,3),(2,2),(1,1)]),
+        "[1, 1, 2]":(23,3,[(3,3),(2,2),(1,1)]),
+        "[1, 1, 2, 3]":(28,3,[(2,2),(3,3),(1,1)])
+    }
+    ,
+    {
+        "[2]":(17,1,[(3,3),(2,4)]), #7
+        "[2, 2]":(22,1,[(1,1),(2,2)]),
+        "[1]":(17,1,[(2,4),(3,3)]),
+        "[1, 2]":(21,1,[(2,5),(3,4)]),
+        "[1, 2, 2]":(26,3,[(3,1),(2,2)]),
+        "[1, 1]":(22,1,[(2,2),(1,1)]),
+        "[1, 1, 2]":(26,3,[(2,2),(3,1)]),
+        "[1, 1, 2, 2]":(27,3,[(1,1),(2,2)])
+    }
+    ,
+    {
+        "[2]":(19,1,[(3,3),(2,4)]), #8
+        "[2, 2]":(25,2,[(2,2),(1,1)]),
+        "[1]":(18,1,[(2,4),(3,3)]),
+        "[1, 2]":(24,4,[(3,1),(2,3)]),
+        "[1, 2, 2]":(28,2,[(2,1),(3,3)]),
+        "[1, 1]":(26,1,[(2,2),(3,3)]),
+        "[1, 1, 2]":(27,1,[(2,2),(3,1)]),
+        "[1, 1, 2, 2]":(29,2,[(1,1),(2,2)])
+    }
+    ,
+    {
+        "[1]":(23,1,[(2,3)]), #9
+        "[1, 1]":(28,1,[(3,2)]),
+        "[1, 1, 1]":(29,1,[(2,1)]),
+        "[1, 1, 1, 1]":(30,1,[(1,1)])
+    }
 ]
 
 def create_graph(name):
@@ -156,47 +156,47 @@ def calculate_neighbors_degree(v, neighbors_vsub, degree_vsub):
         result += 1+degree_vsub[n]
     return result
 
-def index_patternd(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub, pt, ps):
+def index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub, adjacency_matrix_vsub, pt, ps):
     dict_temp = DICT[id_vsub][str(classes_neighbors_new)]
     new_id_vsub = dict_temp[0]
-    pt[new_id_vsub] += 1
-    new_classes_vsub = []
+    pt[new_id_vsub - 1] += 1
+    new_classes_vsub = [0,0,0,0,0]
     i = 0
     while i < length_vsub-1:
-        new_classes_vsub.append(dict_temp[2][classe+1])
+        if adjacency_matrix_vsub[length_vsub-1][i]:
+            new_classes_vsub[i] = dict_temp[2][classes_vsub[i]-1][0]
+        else:
+            new_classes_vsub[i] = dict_temp[2][classes_vsub[i]-1][1]
         i += 1
-    new_classes_vsub.append(dict_temp[1])
+    new_classes_vsub[i] = dict_temp[1]
     return (new_id_vsub,new_classes_vsub)
     
 
-def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, degree_vsub, des, vext, 
-                    v, k, pt, ps, patterns, power_table, power_differences_table):
-    if length_vsub > 1:
-        couple = index_pattern(vsub, id_vsub, classes_vsub, pt, ps)
+def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, id_vsub, classes_vsub, vext, 
+                    v, k, pt, ps, patterns):
     while vext:
         w = vext.pop()
         vext2 = list(vext)
         classes_neighbors_new = []
         for u in list_neighbors[w.index]:
             if u.index >= v.index:
-                if index_vsub[u.index] == -1 and not in_neighborhood_vsub(v, index_vsub, list_neighbors[u.index]):
-                    vext2.append(u)
+                if index_vsub[u.index] == -1 :
+                    if not in_neighborhood_vsub(v, index_vsub, list_neighbors[u.index]):
+                        vext2.append(u)
+                else:
+                    classes_neighbors_new.append(classes_vsub[index_vsub[u.index]])
+                    adjacency_matrix_vsub[length_vsub][index_vsub[u.index]] = True
             else:
                 break
+        classes_neighbors_new.sort()
         vsub[length_vsub] = w
         index_vsub[w.index] = length_vsub
-        couple = index_pattern(vsub, id_vsub, classes_vsub, pt, ps)
+        couple = index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub+1, adjacency_matrix_vsub, pt, ps)
         if length_vsub != k-1:
-            extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub+1, index_vsub, adjacency_matrix_vsub, degree_vsub, 
-                        des+des2+power_table[degree_vsub[length_vsub]], vext2, v, k, pt, ps, patterns, power_table, power_differences_table)
-        else :
-            index_pattern(vsub, neighbors_vsub, length_vsub + 1, adjacency_matrix_vsub, degree_vsub, des+des2+power_table[degree_vsub[length_vsub]], pt, ps, patterns, power_table, power_differences_table)  
+            extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub+1, index_vsub, adjacency_matrix_vsub, couple[0], couple[1],
+                        vext2, v, k, pt, ps, patterns)
         index_vsub[w.index] = -1
-        for neighbor in neighbors_vsub[length_vsub]:
-            adjacency_matrix_vsub[length_vsub][neighbor] = False
-            degree_vsub[neighbor] -= 1
-        degree_vsub[length_vsub] = 0
-        neighbors_vsub[length_vsub] = []
+        adjacency_matrix_vsub[length_vsub] = [False,False,False,False,False]
   
 def characterize_with_patterns(graph, k):
     vs = graph.vs
@@ -205,8 +205,6 @@ def characterize_with_patterns(graph, k):
     ps = []
     i = 0
     patterns = patterns_5.PATTERNS
-    power_table = GLOBAL_POWER_TABLE
-    power_differences_table = GLOBAL_POWER_DIFFERENCES_TABLE
     while i < length:
         ps.append(73*[0])
         i += 1
@@ -215,10 +213,16 @@ def characterize_with_patterns(graph, k):
         vsub = [v, None, None, None, None]
         neighbors_vsub = [[], [], [], [], []]
         degree_vsub = [0, 0, 0, 0, 0]
+        classes_vsub = [1, 0, 0, 0, 0]
+        id_vsub = 0
         des = 0
         length_vsub = 1
         index_vsub = [-1]*length
-        adjacency_matrix_vsub = [[False]*5]*5
+        adj = 0
+        adjacency_matrix_vsub = []
+        while adj < 5:
+            adjacency_matrix_vsub.append([False,False,False,False,False])
+            adj += 1
         index_vsub[v.index] = 0
         vext = []
         for u in list_neighbors[v.index]:
@@ -227,8 +231,8 @@ def characterize_with_patterns(graph, k):
             else:
                break
         if vext:
-            extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, degree_vsub, des, vext, v, k, pt, 
-                            ps, patterns, power_table, power_differences_table)
+            extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, id_vsub, classes_vsub, vext, v, k, pt, 
+                            ps, patterns)
     return (pt, ps) 
  
 def main():
