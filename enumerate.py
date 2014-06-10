@@ -149,12 +149,18 @@ def in_neighborhood_vsub(v, index_vsub, list_neighbors):
         if not index_vsub[n.index] == -1:
             return True
     return False
-
-def calculate_neighbors_degree(v, neighbors_vsub, degree_vsub):
-    result = 0
-    for n in neighbors_vsub[v]:
-        result += 1+degree_vsub[n]
-    return result
+    
+def add_to_classes_neighbors_new(classes_neighbors_new,classe_neighbor):
+    i = 0
+    if len(classes_neighbors_new) == 0:
+        classes_neighbors_new.append(classe_neighbor)
+        return
+    while i < len(classes_neighbors_new):
+        if classe_neighbor <= classes_neighbors_new[i]:
+            classes_neighbors_new.insert(i,classe_neighbor)
+            return
+        i += 1
+    classes_neighbors_new.append(classe_neighbor)
 
 def index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub, adjacency_matrix_vsub, pt, ps):
     dict_temp = DICT[id_vsub][str(classes_neighbors_new)]
@@ -170,10 +176,11 @@ def index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsu
         i += 1
     new_classes_vsub[i] = dict_temp[1]
     return (new_id_vsub,new_classes_vsub)
+
     
 
-def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, id_vsub, classes_vsub, vext, 
-                    v, k, pt, ps, patterns):
+def extend_subgraph(list_neighbors, vsub, length_vsub, index_vsub, adjacency_matrix_vsub, id_vsub, classes_vsub, vext, 
+                    v, k, pt, ps):
     while vext:
         w = vext.pop()
         vext2 = list(vext)
@@ -184,19 +191,20 @@ def extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsu
                     if not in_neighborhood_vsub(v, index_vsub, list_neighbors[u.index]):
                         vext2.append(u)
                 else:
-                    classes_neighbors_new.append(classes_vsub[index_vsub[u.index]])
+                    #classes_neighbors_new.append(classes_vsub[index_vsub[u.index]])
+                    add_to_classes_neighbors_new(classes_neighbors_new,classes_vsub[index_vsub[u.index]])
                     adjacency_matrix_vsub[length_vsub][index_vsub[u.index]] = True
             else:
                 break
-        classes_neighbors_new.sort()
+        #classes_neighbors_new.sort()
         vsub[length_vsub] = w
         index_vsub[w.index] = length_vsub
         couple = index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub+1, adjacency_matrix_vsub, pt, ps)
         if length_vsub != k-1:
-            extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub+1, index_vsub, adjacency_matrix_vsub, couple[0], couple[1],
-                        vext2, v, k, pt, ps, patterns)
+            extend_subgraph(list_neighbors, vsub, length_vsub+1, index_vsub, adjacency_matrix_vsub, couple[0], couple[1],
+                        vext2, v, k, pt, ps)
         index_vsub[w.index] = -1
-        adjacency_matrix_vsub[length_vsub] = [False,False,False,False,False]
+        adjacency_matrix_vsub[length_vsub] = [False]*k
   
 def characterize_with_patterns(graph, k):
     vs = graph.vs
@@ -210,19 +218,22 @@ def characterize_with_patterns(graph, k):
         i += 1
     list_neighbors = create_list_neighbors(graph)
     for v in vs:
-        vsub = [v, None, None, None, None]
-        neighbors_vsub = [[], [], [], [], []]
-        degree_vsub = [0, 0, 0, 0, 0]
-        classes_vsub = [1, 0, 0, 0, 0]
         id_vsub = 0
-        des = 0
         length_vsub = 1
         index_vsub = [-1]*length
-        adj = 0
+        temp = 0
         adjacency_matrix_vsub = []
-        while adj < 5:
-            adjacency_matrix_vsub.append([False,False,False,False,False])
-            adj += 1
+        vsub = []
+        neighbors_vsub = []
+        classes_vsub = []
+        while temp < k:
+            adjacency_matrix_vsub.append([False]*k)
+            vsub.append(None)
+            neighbors_vsub.append([])
+            classes_vsub.append(0)
+            temp += 1
+        classes_vsub[0] = 1
+        vsub[0] = v
         index_vsub[v.index] = 0
         vext = []
         for u in list_neighbors[v.index]:
@@ -231,8 +242,7 @@ def characterize_with_patterns(graph, k):
             else:
                break
         if vext:
-            extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, id_vsub, classes_vsub, vext, v, k, pt, 
-                            ps, patterns)
+            extend_subgraph(list_neighbors, vsub, length_vsub, index_vsub, adjacency_matrix_vsub, id_vsub, classes_vsub, vext, v, k, pt, ps)
     return (pt, ps) 
  
 def main():
