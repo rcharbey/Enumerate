@@ -162,11 +162,11 @@ def add_to_classes_neighbors_new(classes_neighbors_new,classe_neighbor):
         i += 1
     classes_neighbors_new.append(classe_neighbor)
 
-def index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub, adjacency_matrix_vsub, pt, ps):
+def index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub, adjacency_matrix_vsub, k, pt, ps):
     dict_temp = DICT[id_vsub][str(classes_neighbors_new)]
     new_id_vsub = dict_temp[0]
     pt[new_id_vsub - 1] += 1
-    new_classes_vsub = [0,0,0,0,0]
+    new_classes_vsub = [0]*k
     i = 0
     while i < length_vsub-1:
         if adjacency_matrix_vsub[length_vsub-1][i]:
@@ -176,7 +176,6 @@ def index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsu
         i += 1
     new_classes_vsub[i] = dict_temp[1]
     return (new_id_vsub,new_classes_vsub)
-
     
 
 def extend_subgraph(list_neighbors, vsub, length_vsub, index_vsub, adjacency_matrix_vsub, id_vsub, classes_vsub, vext, 
@@ -199,7 +198,7 @@ def extend_subgraph(list_neighbors, vsub, length_vsub, index_vsub, adjacency_mat
         #classes_neighbors_new.sort()
         vsub[length_vsub] = w
         index_vsub[w.index] = length_vsub
-        couple = index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub+1, adjacency_matrix_vsub, pt, ps)
+        couple = index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub+1, adjacency_matrix_vsub, k, pt, ps)
         if length_vsub != k-1:
             extend_subgraph(list_neighbors, vsub, length_vsub+1, index_vsub, adjacency_matrix_vsub, couple[0], couple[1],
                         vext2, v, k, pt, ps)
@@ -246,10 +245,10 @@ def characterize_with_patterns(graph, k):
     return (pt, ps) 
  
 def main():
-    graph = create_graph(sys.argv[1])
+    graph = create_graph(sys.argv[2])
     #graph = Graph.Formula(" A-B, A-C, A-D, A-E, B-C, C-D, C-F, D-E, D-F, D-G, E-G, E-H, F-G, G-H ")
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
-    couple = characterize_with_patterns(graph, 5)
+    couple = characterize_with_patterns(graph, int(sys.argv[1]))
     print couple[0]
     return couple
 
