@@ -324,7 +324,7 @@ def main():
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
     couple = characterize_with_patterns(graph, 5)
     print couple[0]
-    plot.write("D" + "," + str(len(graph.vs)) + "," + str(len(graph.es)) + "," + str(time.time()-begin) + "\n")
+    plot.write("N" + "," + str(len(graph.vs)) + "," + str(len(graph.es)) + "," + str(time.time()-begin) + "\n")
     return couple
 
 
