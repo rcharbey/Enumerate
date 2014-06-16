@@ -7,6 +7,7 @@ import json
 import profile
 sys.path.append("/home/raphael/MPRI/Stage MPRI/sources/patterns/PATTERNS")
 import patterns_5
+import time
 
 GLOBAL_POWER_TABLE = [0, 6, 36, 216, 1296]
 GLOBAL_POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
@@ -316,11 +317,14 @@ def characterize_with_patterns(graph, k):
     return (pt, ps) 
  
 def main():
+    begin = time.time()
+    plot = open("plot.txt","a")
     graph = create_graph(sys.argv[1])
     #graph = Graph.Formula(" A-B, A-C, A-D, A-E, B-C, C-D, C-F, D-E, D-F, D-G, E-G, E-H, F-G, G-H ")
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
     couple = characterize_with_patterns(graph, 5)
     print couple[0]
+    plot.write("D" + "," + str(len(graph.vs)) + "," + str(len(graph.es)) + "," + str(time.time()-begin) + "\n")
     return couple
 
 
