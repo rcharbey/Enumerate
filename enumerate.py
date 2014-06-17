@@ -316,16 +316,12 @@ def characterize_with_patterns(graph, k):
                             ps, patterns, power_table, power_differences_table)
     return (pt, ps) 
  
-def main():
+def main(k, file_graph):
     begin = time.time()
     plot = open("plot.txt","a")
-    graph = create_graph(sys.argv[1])
-    #graph = Graph.Formula(" A-B, A-C, A-D, A-E, B-C, C-D, C-F, D-E, D-F, D-G, E-G, E-H, F-G, G-H ")
+    graph = create_graph(file_graph)
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
-    couple = characterize_with_patterns(graph, 5)
+    couple = characterize_with_patterns(graph, k)
     print couple[0]
     plot.write("N" + "," + str(len(graph.vs)) + "," + str(len(graph.es)) + "," + str(time.time()-begin) + "\n")
     return couple
-
-
-main()
