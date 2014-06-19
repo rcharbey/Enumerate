@@ -5,7 +5,7 @@ from igraph import Graph
 import sys
 import json
 import profile
-sys.path.append("/home/raphael/MPRI/Stage MPRI/sources/patterns/PATTERNS")
+sys.path.append("/home/raphael/Algopol/sources/patterns/PATTERNS")
 import patterns_5
 import time
 
