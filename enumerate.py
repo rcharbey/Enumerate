@@ -251,7 +251,14 @@ def main(k, file_graph):
     plot = open("plot.txt","a")
     graph = create_graph(file_graph)
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
+<<<<<<< HEAD
     couple = characterize_with_patterns(graph, int(k))
     print couple[0]
     plot.write("D" + "," + str(len(graph.vs)) + "," + str(len(graph.es)) + "," + str(time.time()-begin) + "\n")
     return couple
+=======
+    couple = characterize_with_patterns(graph, k)
+    print couple[0]
+    plot.write("N" + "," + str(len(graph.vs)) + "," + str(len(graph.es)) + "," + str(time.time()-begin) + "\n")
+    return couple
+>>>>>>> dev
