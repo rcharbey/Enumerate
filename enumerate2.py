@@ -158,7 +158,6 @@ def extend_subgraph(list_neighbors, vsub, length_vsub, index_vsub, adjacency_mat
                     adjacency_matrix_vsub[length_vsub][index_vsub[u.index]] = True
             else:
                 break
-        #IIIIIIIIIIII
         classes_neighbors_new.sort()
         vsub[length_vsub] = w
         index_vsub[w.index] = length_vsub
