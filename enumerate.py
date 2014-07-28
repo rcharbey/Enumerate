@@ -110,17 +110,21 @@ def in_neighborhood_vsub(v, index_vsub, list_neighbors):
             return True
     return False
     
-def add_to_classes_neighbors_new(classes_neighbors_new,classe_neighbor):
-    i = 0
-    if len(classes_neighbors_new) == 0:
-        classes_neighbors_new.append(classe_neighbor)
-        return
-    while i < len(classes_neighbors_new):
-        if classe_neighbor <= classes_neighbors_new[i]:
-            classes_neighbors_new.insert(i,classe_neighbor)
-            return
-        i += 1
+#def add_to_classes_neighbors_new(classes_neighbors_new,classe_neighbor):
+    #i = 0
+    #if len(classes_neighbors_new) == 0:
+        #classes_neighbors_new.append(classe_neighbor)
+        #return
+    #while i < len(classes_neighbors_new):
+        #if classe_neighbor <= classes_neighbors_new[i]:
+            #classes_neighbors_new.insert(i,classe_neighbor)
+            #return
+        #i += 1
+    #classes_neighbors_new.append(classe_neighbor)
+    
+def add_to_classes_neighbors_new(classes_neighbors_new, classe_neighbor):
     classes_neighbors_new.append(classe_neighbor)
+    return
 
 def index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub, adjacency_matrix_vsub, k, pt, ps):
     dict_temp = DICT[id_vsub][str(classes_neighbors_new)]
@@ -151,11 +155,12 @@ def extend_subgraph(list_neighbors, vsub, length_vsub, index_vsub, adjacency_mat
                         vext2.append(u)
                 else:
                     #classes_neighbors_new.append(classes_vsub[index_vsub[u.index]])
-                    add_to_classes_neighbors_new(classes_neighbors_new,classes_vsub[index_vsub[u.index]])
+                    add_to_classes_neighbors_new(classes_neighbors_new, classes_vsub[index_vsub[u.index]])
                     adjacency_matrix_vsub[length_vsub][index_vsub[u.index]] = True
             else:
                 break
-        #classes_neighbors_new.sort()
+        #IIIIIIIIIIII
+        classes_neighbors_new.sort()
         vsub[length_vsub] = w
         index_vsub[w.index] = length_vsub
         couple = index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsub+1, adjacency_matrix_vsub, k, pt, ps)
