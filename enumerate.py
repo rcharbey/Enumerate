@@ -154,12 +154,11 @@ def extend_subgraph(list_neighbors, vsub, length_vsub, index_vsub, adjacency_mat
                     if not in_neighborhood_vsub(v, index_vsub, list_neighbors[u.index]):
                         vext2.append(u)
                 else:
-                    #classes_neighbors_new.append(classes_vsub[index_vsub[u.index]])
-                    add_to_classes_neighbors_new(classes_neighbors_new, classes_vsub[index_vsub[u.index]])
+                    classes_neighbors_new.append(classes_vsub[index_vsub[u.index]])
+                    #add_to_classes_neighbors_new(classes_neighbors_new, classes_vsub[index_vsub[u.index]])
                     adjacency_matrix_vsub[length_vsub][index_vsub[u.index]] = True
             else:
                 break
-        #IIIIIIIIIIII
         classes_neighbors_new.sort()
         vsub[length_vsub] = w
         index_vsub[w.index] = length_vsub
