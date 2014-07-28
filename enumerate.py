@@ -1,14 +1,13 @@
 #
 # Raphael Charbey, 2014
 #
-from igraph import Graph
 import sys
-import json
 import profile
 sys.path.append("/home/raphael/Algopol/sources/patterns/PATTERNS")
 sys.path.append("~/patterns/PATTERNS")
 import patterns_5
 import time
+import methods_graph
 
 DICT = [
     {   "[1]":(1,1,[(1,1)]) #0
@@ -105,47 +104,6 @@ DICT = [
     }
 ]
 
-def create_graph(name):
-    path = "./data/"+name+"/friends.jsons"
-    f = open(path, 'r')
-    list_of_edges = []
-    index_to_vertex = {}
-    vertex_to_index = {}
-    nb_of_vertices = 0
-    for line in f:
-        jr = json.loads(line)
-        if not "mutual" in jr:
-            continue
-        if not jr["id"] in vertex_to_index:
-            vertex_to_index[jr["id"]] = nb_of_vertices
-            index_to_vertex[nb_of_vertices] = jr["id"]
-            nb_of_vertices += 1
-        for neighbor in jr["mutual"]:
-            if not neighbor["id"] in vertex_to_index:
-                vertex_to_index[neighbor["id"]] = nb_of_vertices
-                index_to_vertex[nb_of_vertices] = neighbor["id"]
-                nb_of_vertices += 1
-            if vertex_to_index[jr["id"]] > vertex_to_index[neighbor["id"]]:
-                list_of_edges.append((vertex_to_index[jr["id"]], vertex_to_index[neighbor["id"]]))      
-    f.close()
-    graph = Graph(list_of_edges)
-    for v in graph.vs:
-        v["name"] = index_to_vertex[v.index]
-    return graph
-           
-def create_list_neighbors(graph):
-    vs = graph.vs
-    es = graph.es
-    list_neighbors = []
-    for v in vs:
-        list_neighbors.append([])
-    for e in es:
-        list_neighbors[e.target].append(vs[e.source])
-        list_neighbors[e.source].append(vs[e.target])
-    for l in list_neighbors:
-        l.sort(key =lambda vertex: vertex.index,  reverse = True)
-    return list_neighbors  
-  
 def in_neighborhood_vsub(v, index_vsub, list_neighbors):
     for n in list_neighbors:
         if not index_vsub[n.index] == -1:
@@ -177,7 +135,7 @@ def index_pattern(vsub, id_vsub, classes_vsub, classes_neighbors_new, length_vsu
             new_classes_vsub[i] = dict_temp[2][classes_vsub[i]-1][1]
         i += 1
     new_classes_vsub[i] = dict_temp[1]
-    return (new_id_vsub,new_classes_vsub)
+    return (new_id_vsub, new_classes_vsub)
     
 
 def extend_subgraph(list_neighbors, vsub, length_vsub, index_vsub, adjacency_matrix_vsub, id_vsub, classes_vsub, vext, 
@@ -217,7 +175,7 @@ def characterize_with_patterns(graph, k):
     while i < length:
         ps.append(73*[0])
         i += 1
-    list_neighbors = create_list_neighbors(graph)
+    list_neighbors = methods_graph.create_list_neighbors(graph)
     for v in vs:
         id_vsub = 0
         length_vsub = 1
@@ -246,19 +204,16 @@ def characterize_with_patterns(graph, k):
             extend_subgraph(list_neighbors, vsub, length_vsub, index_vsub, adjacency_matrix_vsub, id_vsub, classes_vsub, vext, v, k, pt, ps)
     return (pt, ps) 
  
-def main(k, file_graph):
+def main(k, path, file_graph):
+    print "bonjour"
     begin = time.time()
     plot = open("plot.txt","a")
-    graph = create_graph(file_graph)
-    print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
-<<<<<<< HEAD
-    couple = characterize_with_patterns(graph, int(k))
-    print couple[0]
-    plot.write("D" + "," + str(len(graph.vs)) + "," + str(len(graph.es)) + "," + str(time.time()-begin) + "\n")
-    return couple
-=======
+    graph = methods_graph.create_graph(path, file_graph)[0]
+    print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es))
     couple = characterize_with_patterns(graph, k)
     print couple[0]
     plot.write("N" + "," + str(len(graph.vs)) + "," + str(len(graph.es)) + "," + str(time.time()-begin) + "\n")
     return couple
->>>>>>> dev
+    
+main(int(sys.argv[1]), sys.argv[2], sys.argv[3])
+#argparse
