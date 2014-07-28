@@ -3,56 +3,12 @@ import json
 from igraph import *
 import math
 
-def create_graph_comments(folder, name):
-    path = "./data/"+folder+"/"+name+"/statuses.jsons"
+def create_graph(folder, name):
+    path = "./data/"+folder+"/"+name+"/friends.jsons"
     f = open(path, 'r')
     dict_of_edges = {}
     index_to_vertex = {}
-    vertex_to_index = {}
-    nb_comments_per_alter = []
-    nb_of_vertices = 0
-    nb_comments = 0
-    for line in f:
-        nb_comments += 1
-        jr = json.loads(line)
-        if not "comments" in jr:
-            continue
-        list_current_com = []
-        for comment in jr["comments"]:
-            if not comment["from"]["id"] == name and not comment["from"]["id"] in vertex_to_index:
-                nb_comments_per_alter.append(0)
-                vertex_to_index[comment["from"]["id"]] = nb_of_vertices
-                index_to_vertex[nb_of_vertices] = comment["from"]["id"]
-                nb_of_vertices += 1
-            if not comment["from"]["id"] == name:
-                nb_comments_per_alter[vertex_to_index[comment["from"]["id"]]] += 1
-        for comment in jr["comments"]:
-            if not comment["from"]["id"] == name : 
-                for comment_second in jr["comments"]:
-                    if not comment_second["from"]["id"] == name:
-                        id_comment = vertex_to_index[comment["from"]["id"]]
-                        id_second = vertex_to_index[comment_second["from"]["id"]]
-                        if id_comment < id_second:
-                            if (id_comment, id_second) not in dict_of_edges:
-                                dict_of_edges[(id_comment, id_second)] = 1
-                            else:
-                                dict_of_edges[(id_comment, id_second)] += 1
-    f.close()
-    graph = Graph(dict_of_edges.keys())
-    for v in graph.vs:
-        v["name"] = index_to_vertex[v.index]
-        v["size"] = 10+10*math.log(nb_comments_per_alter[vertex_to_index[v["name"]]])
-    for e in graph.es():
-        e["width"] = 1+math.log(dict_of_edges[e.tuple])
-    print nb_comments
-    return graph
-    
-    
-def create_graph_friends(folder, name):
-    path = "./data/"+folder+"/"+name+"/friends.jsons"
-    f = open(path, 'r')
-    list_of_edges = []
-    index_to_vertex = {}
+    index_to_graph_in = {}
     vertex_to_index = {}
     nb_of_vertices = 0
     for line in f:
@@ -62,75 +18,125 @@ def create_graph_friends(folder, name):
         if not jr["id"] in vertex_to_index:
             vertex_to_index[jr["id"]] = nb_of_vertices
             index_to_vertex[nb_of_vertices] = jr["id"]
+            index_to_graph_in[nb_of_vertices] = 0
             nb_of_vertices += 1
         for neighbor in jr["mutual"]:
             if not neighbor["id"] in vertex_to_index:
                 vertex_to_index[neighbor["id"]] = nb_of_vertices
                 index_to_vertex[nb_of_vertices] = neighbor["id"]
+                index_to_graph_in[nb_of_vertices] = 0
                 nb_of_vertices += 1
             if vertex_to_index[jr["id"]] < vertex_to_index[neighbor["id"]]:
-                list_of_edges.append((vertex_to_index[jr["id"]], vertex_to_index[neighbor["id"]]))      
+                dict_of_edges[(vertex_to_index[jr["id"]], vertex_to_index[neighbor["id"]])] = [0,0]      
     f.close()
-    graph = Graph(list_of_edges)
-    for v in graph.vs:
-        v["name"] = index_to_vertex[v.index]
-    return graph
-     
-     
-def fusion(graph1, graph2):
-    vs1 = graph1.vs
-    vs2 = graph2.vs
-    dict_of_edges = {}
-    for e2 in graph2.es:
-        e2["ok"] = 0
-    for e1 in graph1.es:
-        e1["ok"] = 0
-        for e2 in graph2.es:
-            if vs1[e1.source]["name"] == vs2[e2.source]["name"] and vs1[e1.target]["name"] == vs2[e2.target]["name"]:
-                dict_of_edges[(e1.source, e1.target)] = 3
-                e2["ok"] = 1
-                e1["ok"] = 1
-                break
-        if e1["ok"] == 0:
-            dict_of_edges[(e1.source, e1.target)] = 1
-    for e2 in graph2.es:
-        if e2["ok"] == 0:
-            i = 0
-            while i < len(vs1):
-                if vs1[i]["name"] == vs2[e2.source]["name"]:
-                    id_source = i
-                if vs1[i]["name"] == vs2[e2.target]["name"]:
-                    id_target = i
-                i += 1
-            if id_source < id_target:
-                dict_of_edges[(id_source, id_target)] = 2
-            else:
-                dict_of_edges[(id_target, id_source)] = 2
+    path = "./data/"+folder+"/"+name+"/statuses.jsons"
+    f = open(path, 'r')
+    nb_comments_per_alter = []
+    nb_comments = 0
+    for line in f:
+        nb_comments += 1
+        jr = json.loads(line)
+        if jr["from"]["id"] != name:
+            continue
+        if "comments" in jr:
+            list_current_com = []
+            for v in vertex_to_index:
+                nb_comments_per_alter.append(0)
+            for comment in jr["comments"]:
+                commenter = comment["from"]["id"]
+                if commenter != name :
+                    if not commenter in vertex_to_index:
+                        nb_comments_per_alter.append(0)
+                        vertex_to_index[commenter] = nb_of_vertices
+                        index_to_vertex[nb_of_vertices] = commenter
+                        index_to_graph_in[nb_of_vertices] = 1
+                        nb_of_vertices += 1
+                    else:
+                        nb_comments_per_alter[vertex_to_index[commenter]] += 1
+                        if index_to_graph_in[vertex_to_index[commenter]] == 0:
+                            index_to_graph_in[vertex_to_index[commenter]] = 3
+            for comment in jr["comments"]:
+                if not comment["from"]["id"] == name : 
+                    for comment_second in jr["comments"]:
+                        if not comment_second["from"]["id"] == name:
+                            id_comment = vertex_to_index[comment["from"]["id"]]
+                            id_second = vertex_to_index[comment_second["from"]["id"]]
+                            if id_comment < id_second:
+                                if (id_comment, id_second) not in dict_of_edges:
+                                    dict_of_edges[(id_comment, id_second)] = [1,1]
+                                else:
+                                    if dict_of_edges[(id_comment, id_second)][0] == 0:
+                                        dict_of_edges[(id_comment, id_second)][0] = 3
+                                    dict_of_edges[(id_comment, id_second)][1] += 1
+        #if "likes" in jr:
+            #for like in jr["likes"]:
+                #if not like["id"] == name:
+                    #if not like["id"] in vertex_to_index:
+                        #nb_comments_per_alter.append(0)
+                        #vertex_to_index[like["id"]] = nb_of_vertices
+                        #index_to_vertex[nb_of_vertices] = like["id"]
+                        #index_to_graph_in[nb_of_vertices] = 2
+                        #nb_of_vertices += 1
+                    #else:
+                        #if index_to_graph_in[vertex_to_index[like["id"]]] == 0:
+                            #index_to_graph_in[vertex_to_index[like["id"]]] = 4
+                        #elif index_to_graph_in[vertex_to_index[like["id"]]] == 1:
+                            #index_to_graph_in[vertex_to_index[like["id"]]] = 5
+                        #elif index_to_graph_in[vertex_to_index[like["id"]]] == 3:
+                            #index_to_graph_in[vertex_to_index[like["id"]]] = 6
+            #for like in jr["likes"]:
+                #if not like["id"] == name:
+                    #for like_second in jr["likes"]:
+                        #if not like_second["id"] == name:
+                            #id_like = vertex_to_index[like["id"]]
+                            #id_second = vertex_to_index[like_second["id"]]
+                            #if id_like < id_second:
+                                #if (id_like, id_second) not in dict_of_edges:
+                                    #dict_of_edges[(id_like, id_second)] = [2,1]
+                                #else:
+                                    #if dict_of_edges[(id_like, id_second)][0] == 0:
+                                        #dict_of_edges[(id_like, id_second)][0] = 4
+                                    #elif dict_of_edges[(id_like, id_second)][0] == 1:
+                                        #dict_of_edges[(id_like, id_second)][0] = 5
+                                    #elif dict_of_edges[(id_like, id_second)][0] == 3:
+                                        #dict_of_edges[(id_like, id_second)][0] = 6                                       
+    f.close()
     graph = Graph(dict_of_edges.keys())
-    return (graph, dict_of_edges)
+    return (graph, index_to_graph_in, dict_of_edges, index_to_vertex)
     
-        
     
-g1 = create_graph_friends(sys.argv[1], sys.argv[2])
-g2 = create_graph_comments(sys.argv[1], sys.argv[2])
-couple = fusion(g1, g2)
-graph = couple[0]
-dict_of_edges = couple[1]
-layout=graph.layout("auto")
+triple = create_graph(sys.argv[1], sys.argv[2])
+graph = triple[0]
+index_to_graph_in = triple[1]
+dict_of_edges = triple[2]
+index_to_vertex = triple[3]
 
+layout = graph.layout_fruchterman_reingold(repulserad = len(graph.vs)**2.5)
+
+color_dict_vertices = ["lightblue", "rgba(0,0,0,0)", "rgba(0,0,0,0)", "violet", "limegreen", "rgba(0,0,0,0)", "black"]
+color_dict_edges = ["darkblue", "rgba(0,0,0,0)", "rgba(0,0,0,0)", "darkviolet", "darkgreen", "rgba(0,0,0,0)", "black"]
+
+plot(graph,layout=layout, vertex_color = [color_dict_vertices[index_to_graph_in[graph_in]] for graph_in in index_to_graph_in], 
+     edge_color = [color_dict_edges[dict_of_edges[(e)][0]] for e in dict_of_edges], vertex_size = 10)
+     
+color_dict_vertices = ["rgba(0,0,0,0)", "lightsalmon", "rgba(0,0,0,0)", "violet", "rgba(0,0,0,0)", "darkorange", "black"]
+color_dict_edges = ["rgba(0,0,0,0)", "darkred", "rgba(0,0,0,0)", "darkviolet", "rgba(0,0,0,0)", "orangered", "black"]
 
 for e in graph.es:
-    e["width"] = 2
-    if dict_of_edges[(e.source, e.target)] == 3:
-        e["color"] = "red"    
-    if dict_of_edges[(e.source, e.target)] == 1:
-        e["color"] = "rgba(0,0,0,0)"
-plot(graph,layout=layout,bbox=(800,800))
+    e["width"] = 1+math.log(1+dict_of_edges[e.tuple][1])
+     
+plot(graph,layout=layout, vertex_color = [color_dict_vertices[index_to_graph_in[graph_in]] for graph_in in index_to_graph_in], 
+edge_color = [color_dict_edges[dict_of_edges[(e)][0]] for e in dict_of_edges], vertex_size = 10)
 
-for e in graph.es:
-    if dict_of_edges[(e.source, e.target)] == 1:
-        e["color"] = "black"
-    if dict_of_edges[(e.source, e.target)] == 2:
-        e["color"] = "rgba(0,0,0,0)"
-plot(graph,layout=layout,bbox=(800,800))
+#color_dict_vertices = ["rgba(0,0,0,0)", "rgba(0,0,0,0)", "khaki", "rgba(0,0,0,0)", "limegreen", "darkorange", "black"]
+#color_dict_edges = ["rgba(0,0,0,0)", "rgba(0,0,0,0)", "gold", "rgba(0,0,0,0)", "darkgreen", "orangered", "black"]
+
+#for e in graph.es:
+    #e["width"] = 1
+    
+#plot(graph,layout=layout, vertex_color = [color_dict_vertices[index_to_graph_in[graph_in]] for graph_in in index_to_graph_in], 
+#edge_color = [color_dict_edges[dict_of_edges[(e)][0]] for e in dict_of_edges], vertex_size = 10)
         
+        
+#Super families Milo
+#David.o.fourquet@gmail.com
