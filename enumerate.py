@@ -5,53 +5,15 @@ from igraph import Graph
 import sys
 import json
 import profile
-sys.path.append("PATTERNS")
+sys.path.append("../Dictionnaires")
+sys.path.append("../Methodes_graphe")
+import methods_graph
 import patterns_5
 import time
+import argparse
 
 GLOBAL_POWER_TABLE = [0, 6, 36, 216, 1296]
 GLOBAL_POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
-
-def create_graph(name):
-    path = "./data/"+name+"/friends.jsons"
-    f = open(path, 'r')
-    list_of_edges = []
-    index_to_vertex = {}
-    vertex_to_index = {}
-    nb_of_vertices = 0
-    for line in f:
-        jr = json.loads(line)
-        if not "mutual" in jr:
-            continue
-        if not jr["id"] in vertex_to_index:
-            vertex_to_index[jr["id"]] = nb_of_vertices
-            index_to_vertex[nb_of_vertices] = jr["id"]
-            nb_of_vertices += 1
-        for neighbor in jr["mutual"]:
-            if not neighbor["id"] in vertex_to_index:
-                vertex_to_index[neighbor["id"]] = nb_of_vertices
-                index_to_vertex[nb_of_vertices] = neighbor["id"]
-                nb_of_vertices += 1
-            if vertex_to_index[jr["id"]] > vertex_to_index[neighbor["id"]]:
-                list_of_edges.append((vertex_to_index[jr["id"]], vertex_to_index[neighbor["id"]]))      
-    f.close()
-    graph = Graph(list_of_edges)
-    for v in graph.vs:
-        v["name"] = index_to_vertex[v.index]
-    return graph
-           
-def create_list_neighbors(graph):
-    vs = graph.vs
-    es = graph.es
-    list_neighbors = []
-    for v in vs:
-        list_neighbors.append([])
-    for e in es:
-        list_neighbors[e.target].append(vs[e.source])
-        list_neighbors[e.source].append(vs[e.target])
-    for l in list_neighbors:
-        l.sort(key =lambda vertex: vertex.index,  reverse = True)
-    return list_neighbors  
   
 def in_neighborhood_vsub(v, index_vsub, list_neighbors):
     for n in list_neighbors:
@@ -295,7 +257,7 @@ def characterize_with_patterns(graph, k):
     while i < length:
         ps.append(73*[0])
         i += 1
-    list_neighbors = create_list_neighbors(graph)
+    list_neighbors = methods_graph.create_list_neighbors(graph)
     for v in vs:
         vsub = [v, None, None, None, None]
         neighbors_vsub = [[], [], [], [], []]
@@ -316,12 +278,20 @@ def characterize_with_patterns(graph, k):
                             ps, patterns, power_table, power_differences_table)
     return (pt, ps) 
  
-def main(k, file_graph):
-    begin = time.time()
-    plot = open("plot.txt","a")
-    graph = create_graph(file_graph)
+def main():
+    
+    parser = argparse.ArgumentParser(description="truc")
+    parser.add_argument('k', help="taille maximale des patterns a enumerer")
+    parser.add_argument('dossier', help="emplacement dans data de ego")
+    parser.add_argument('nom', help="nom de ego")
+    parser.add_argument('--option', '-o', nargs='+')
+    args = parser.parse_args()
+    
+    triple = methods_graph.create_graph(args.dossier, args.nom)
+    graph = triple[0]
     print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
-    couple = characterize_with_patterns(graph, k)
+    couple = characterize_with_patterns(graph, int(args.k))
     print couple[0]
-    plot.write("N" + "," + str(len(graph.vs)) + "," + str(len(graph.es)) + "," + str(time.time()-begin) + "\n")
     return couple
+    
+main()
