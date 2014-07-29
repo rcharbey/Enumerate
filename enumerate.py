@@ -277,21 +277,3 @@ def characterize_with_patterns(graph, k):
             extend_subgraph(list_neighbors, vsub, neighbors_vsub, length_vsub, index_vsub, adjacency_matrix_vsub, degree_vsub, des, vext, v, k, pt, 
                             ps, patterns, power_table, power_differences_table)
     return (pt, ps) 
- 
-def main():
-    
-    parser = argparse.ArgumentParser(description="truc")
-    parser.add_argument('k', help="taille maximale des patterns a enumerer")
-    parser.add_argument('dossier', help="emplacement dans data de ego")
-    parser.add_argument('nom', help="nom de ego")
-    parser.add_argument('--option', '-o', nargs='+')
-    args = parser.parse_args()
-    
-    triple = methods_graph.create_graph(args.dossier, args.nom)
-    graph = triple[0]
-    print "|N| = "+str(len(graph.vs)) +",  |E| = "+str(len(graph.es)) 
-    couple = characterize_with_patterns(graph, int(args.k))
-    print couple[0]
-    return couple
-    
-main()
