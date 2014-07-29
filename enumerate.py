@@ -2,15 +2,11 @@
 # Raphael Charbey, 2014
 #
 from igraph import Graph
+#import profile
 import sys
-import json
-import profile
 sys.path.append("../Dictionnaires")
-sys.path.append("../Methodes_graphe")
 import methods_graph
 import patterns_5
-import time
-import argparse
 
 GLOBAL_POWER_TABLE = [0, 6, 36, 216, 1296]
 GLOBAL_POWER_DIFFERENCES_TABLE = [6, 30, 180, 1080]
