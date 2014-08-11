@@ -3,8 +3,6 @@
 #
 import sys
 import profile
-sys.path.append("/home/raphael/Algopol/sources/patterns/PATTERNS")
-sys.path.append("~/patterns/PATTERNS")
 import patterns_5
 import time
 import methods_graph
