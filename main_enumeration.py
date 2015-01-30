@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import enumerate
 
 def main(graph, options):

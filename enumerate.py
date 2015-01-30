@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+import sys
+sys.path.append('./Graphs')
 import methods_graph
 import index_neighbors_degree
 import index_dictionary
