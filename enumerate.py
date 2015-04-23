@@ -71,6 +71,8 @@ def characterize_with_patterns(graph, k, method):
     
         graph_sub = Graph.Formula()
         v['id_sub'] = 0
+        if not 'name' in v.attributes():
+            v['name'] = str(v.index)
         graph_sub.add_vertex(name = v['name'], **{'id_principal' : v.index, 'evol_class' : 1, 'pattern_sub' : 0, 'neighbors_evol_classes' : []})
         
         vext = []
